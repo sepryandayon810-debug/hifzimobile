@@ -14,8 +14,8 @@
 
   <style>
 /* ============================================
-   WEBPOS PRODUK - MOBILE FULL FIT (FIXED)
-   Identical structure with Kasir Module
+   WEBPOS PRODUK - MOBILE FULL FIT (FINAL)
+   Semua class yang dipakai di HTML ada di sini
    ============================================ */
 
 :root {
@@ -44,6 +44,7 @@
   --radius-sm: 12px;
   --radius-md: 16px;
   --radius-lg: 20px;
+  --radius-xl: 24px;
   
   --sidebar-width: 280px;
   --header-height: 60px;
@@ -92,7 +93,7 @@ body::before {
 }
 
 /* ============================================
-   SIDEBAR - IDENTICAL TO KASIR
+   SIDEBAR - SAMA PERSIS STRUKTUR LAMA
    ============================================ */
 .sidebar {
   position: fixed;
@@ -144,8 +145,41 @@ body::before {
 
 @media(max-width:1024px) { .logo-text { display: block; } }
 
-.menu-toggle {
-  display: none; /* Hidden on mobile, shown on desktop */
+.menu-toggle { display: none; }
+
+.sidebar-search {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-wrapper i {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .sidebar-nav { flex: 1; overflow-y: auto; padding: 1rem; }
@@ -190,7 +224,7 @@ body::before {
 .user-role { font-size: 0.75rem; color: var(--text-muted); }
 
 /* ============================================
-   MAIN CONTENT - IDENTICAL TO KASIR
+   MAIN CONTENT & HEADER
    ============================================ */
 .main-content {
   flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
@@ -201,9 +235,6 @@ body::before {
   .main-content { margin-left: 0; }
 }
 
-/* ============================================
-   HEADER - IDENTICAL TO KASIR (FIXED)
-   ============================================ */
 .main-header {
   height: var(--header-height);
   background: var(--bg-glass); backdrop-filter: blur(20px);
@@ -231,7 +262,7 @@ body::before {
 }
 
 /* ============================================
-   HEADER ACTIONS - FIXED (TOMBOL KANAN)
+   HEADER ACTIONS - FIX TOMBOL KANAN
    ============================================ */
 .header-actions {
   display: flex;
@@ -251,7 +282,7 @@ body::before {
   cursor: pointer; 
   transition: all 0.2s; 
   font-size: 1rem;
-  flex-shrink: 0; /* Penting: jangan biarkan mengecil */
+  flex-shrink: 0;
 }
 
 .btn-icon:hover { 
@@ -261,14 +292,12 @@ body::before {
   transform: translateY(-2px); 
 }
 
-/* Tambah Produk Button */
-.btn-tambah {
+/* TAMBAHAN: Style tombol Import/Export/Tambah di header */
+.header-actions .btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
   padding: 0.625rem 1rem;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
   border: none;
   border-radius: var(--radius-lg);
   font-size: 0.875rem;
@@ -276,31 +305,59 @@ body::before {
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.btn-tambah:hover {
+.header-actions .btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.header-actions .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
 }
 
+.header-actions .btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.header-actions .btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+/* TAMBAHAN: Hide text di mobile, icon only */
 @media(max-width:640px) {
-  .btn-tambah span { display: none; }
-  .btn-tambah { padding: 0.625rem; }
-  .btn-tambah i { margin: 0; }
+  .header-actions .btn span,
+  .header-actions .btn .d-md-inline {
+    display: none !important;
+  }
+  .header-actions .btn {
+    padding: 0.625rem;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+  }
 }
 
 /* ============================================
-   PAGE CONTENT - IDENTICAL TO KASIR
+   PAGE CONTENT
    ============================================ */
 .page-content {
   flex: 1; 
   padding: 0.75rem;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 1rem);
 }
 
 /* ============================================
-   TABS - IDENTICAL TO KASIR
+   TABS
    ============================================ */
 .tab-nav {
   display: flex; 
@@ -323,6 +380,10 @@ body::before {
   border-radius: var(--radius-md); 
   transition: all 0.15s;
   font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .tab-btn:hover { color: var(--text-primary); }
@@ -332,20 +393,24 @@ body::before {
   box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
 }
 
+.tab-content { display: none; }
+.tab-content:first-of-type { display: block; }
+
 /* ============================================
-   TOOLBAR - IDENTICAL TO KASIR (FIXED)
+   TOOLBAR
    ============================================ */
 .produk-toolbar {
   display: flex; 
   gap: 0.5rem; 
   margin-bottom: 0.75rem; 
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .produk-search {
   flex: 1; 
   position: relative;
-  min-width: 0; /* Penting: biarkan flex shrink */
+  min-width: 0;
 }
 
 .produk-search i {
@@ -378,7 +443,8 @@ body::before {
 .produk-filters {
   display: flex; 
   gap: 0.5rem; 
-  flex-shrink: 0; /* Jangan biarkan filter mengecil */
+  flex-shrink: 0;
+  align-items: center;
 }
 
 .filter-select {
@@ -393,11 +459,42 @@ body::before {
   min-width: 120px;
 }
 
+/* TAMBAHAN: View Toggle (Grid/List) */
+.view-toggle {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--bg-secondary);
+  padding: 0.25rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.view-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.view-btn.active {
+  background: var(--bg-card);
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
 @media(max-width:768px) {
   .produk-toolbar {
     flex-wrap: wrap;
   }
-  
   .produk-filters {
     width: 100%;
     overflow-x: auto;
@@ -406,17 +503,19 @@ body::before {
     gap: 0.375rem;
     padding-bottom: 0.25rem;
   }
-  
   .produk-filters::-webkit-scrollbar { display: none; }
-  
   .filter-select {
     min-width: 110px;
     flex-shrink: 0;
   }
+  .view-toggle {
+    transform: scale(0.9);
+    transform-origin: left;
+  }
 }
 
 /* ============================================
-   PRODUCT GRID - IDENTICAL TO KASIR (FIXED)
+   PRODUCT GRID & SKELETON FIX
    ============================================ */
 .produk-grid {
   display: grid;
@@ -424,8 +523,26 @@ body::before {
   gap: 0.75rem;
 }
 
+/* TAMBAHAN: Skeleton loading animation */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--border-color) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.produk-card.skeleton {
+  height: 260px;
+  border: none;
+}
+
 /* ============================================
-   PRODUCT CARD - IDENTICAL TO KASIR (FIXED)
+   PRODUCT CARD - FIX TOMBOL EDIT/HAPUS
    ============================================ */
 .produk-card {
   background: var(--bg-card); 
@@ -437,7 +554,7 @@ body::before {
   box-shadow: var(--shadow-sm);
   display: flex; 
   flex-direction: column;
-  height: 100%; /* Penting: isi tinggi penuh */
+  height: 100%;
 }
 
 .produk-card:hover { 
@@ -447,14 +564,14 @@ body::before {
 }
 
 .produk-image {
-  aspect-ratio: 1 / 0.85; /* Sama seperti kasir */
+  aspect-ratio: 1 / 0.85;
   background: var(--bg-secondary);
   display: flex; 
   align-items: center; 
   justify-content: center;
   position: relative; 
   overflow: hidden;
-  flex-shrink: 0; /* Jangan biarkan gambar mengecil */
+  flex-shrink: 0;
 }
 
 .produk-image img { 
@@ -469,7 +586,6 @@ body::before {
   opacity: 0.5; 
 }
 
-/* Badges */
 .produk-status {
   position: absolute; 
   top: 0.5rem; 
@@ -501,10 +617,10 @@ body::before {
 
 .produk-info { 
   padding: 0.75rem; 
-  flex: 1; /* Isi ruang tersisa */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Penting untuk flex child */
+  min-height: 0;
 }
 
 .produk-name {
@@ -529,19 +645,17 @@ body::before {
   font-weight: 700; 
   color: var(--primary); 
   font-size: 0.875rem;
-  margin-top: auto; /* Dorong ke bawah */
+  margin-top: auto;
 }
 
-/* ============================================
-   PRODUCT ACTIONS - FIXED (TOMBOL EDIT/HAPUS)
-   ============================================ */
+/* FIX: Actions selalu terlihat */
 .produk-actions {
   display: flex; 
   gap: 0.5rem; 
   padding: 0.75rem;
   border-top: 1px solid var(--border-color); 
   background: var(--bg-secondary);
-  flex-shrink: 0; /* Jangan biarkan mengecil/terpotong */
+  flex-shrink: 0;
 }
 
 .produk-actions .btn {
@@ -557,7 +671,7 @@ body::before {
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
-  height: 36px; /* Tinggi fixed */
+  height: 36px;
 }
 
 .produk-actions .btn-edit {
@@ -586,13 +700,11 @@ body::before {
     padding: 0.5rem;
     gap: 0.375rem;
   }
-  
   .produk-actions .btn {
     height: 32px;
     padding: 0.375rem 0.5rem;
     font-size: 0.7rem;
   }
-  
   .produk-actions .btn i {
     font-size: 0.75rem;
   }
@@ -653,7 +765,135 @@ body::before {
 }
 
 /* ============================================
-   MODALS - IDENTICAL TO KASIR
+   KATEGORI - TAMBAHAN LENGKAP
+   ============================================ */
+.kategori-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+@media(max-width:640px) {
+  .kategori-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kategori-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.kategori-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+}
+
+.add-kategori-card {
+  border-style: dashed;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 80px;
+  color: var(--text-muted);
+}
+
+.add-kategori-card i {
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+.add-kategori-card span {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.kategori-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.kategori-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.kategori-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kategori-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.kategori-actions {
+  display: flex;
+  gap: 0.375rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.kategori-card:hover .kategori-actions {
+  opacity: 1;
+}
+
+.kategori-actions .btn-icon {
+  width: 32px;
+  height: 32px;
+  font-size: 0.8rem;
+}
+
+@media(max-width:640px) {
+  .kategori-actions {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   PAGINATION - TAMBAHAN
+   ============================================ */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.pagination .btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 0.625rem;
+  font-size: 0.875rem;
+}
+
+/* ============================================
+   MODALS
    ============================================ */
 .modal-overlay {
   position: fixed; 
@@ -823,6 +1063,30 @@ body::before {
   } 
 }
 
+/* TAMBAHAN: Input Group untuk Harga */
+.input-group {
+  display: flex;
+  align-items: stretch;
+}
+
+.input-group-text {
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  border-right: none;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.input-group .form-input {
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  border-left: none;
+}
+
 /* Stock Input */
 .stock-input-group { 
   display: flex; 
@@ -881,6 +1145,53 @@ body::before {
   margin-top: 1rem; 
 }
 
+/* TAMBAHAN: Add Category Button */
+.add-category-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: 1px dashed var(--primary);
+  color: var(--primary);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-category-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+/* TAMBAHAN: Color Picker */
+.color-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.color-option {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 3px solid transparent;
+  position: relative;
+}
+
+.color-option:hover {
+  transform: scale(1.15);
+}
+
+.color-option.selected {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--primary);
+}
+
 /* ============================================
    BUTTONS
    ============================================ */
@@ -937,8 +1248,17 @@ body::before {
   color: white; 
 }
 
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
 /* ============================================
-   MOBILE BOTTOM NAV - IDENTICAL TO KASIR
+   MOBILE BOTTOM NAV
    ============================================ */
 .mobile-nav {
   display: none; 
@@ -993,10 +1313,11 @@ body::before {
 }
 
 /* ============================================
-   UTILITIES & LOADING
+   UTILITIES & HELPERS
    ============================================ */
 .d-none { display: none !important; }
 .d-flex { display: flex !important; }
+.d-block { display: block !important; }
 .text-center { text-align: center !important; }
 .text-primary { color: var(--primary) !important; }
 .text-success { color: var(--success) !important; }
@@ -1004,6 +1325,41 @@ body::before {
 .font-bold { font-weight: 700 !important; }
 .w-full { width: 100% !important; }
 
+/* TAMBAHAN: Responsive display utilities */
+@media(min-width:1025px) {
+  .d-md-inline { display: inline !important; }
+  .d-md-none { display: none !important; }
+}
+
+@media(max-width:1024px) {
+  .d-md-inline { display: none !important; }
+  .d-md-none { display: flex !important; }
+}
+
+/* TAMBAHAN: Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.empty-state-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+/* Loading & Toast */
 .loading-overlay {
   position: fixed; 
   top: 0; left: 0; right: 0; bottom: 0;
@@ -1013,6 +1369,14 @@ body::before {
   align-items: center; 
   justify-content: center;
   z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s;
+}
+
+.loading-overlay.active {
+  opacity: 1;
+  visibility: visible;
 }
 
 .spinner {
@@ -1028,7 +1392,6 @@ body::before {
   to { transform: rotate(360deg); } 
 }
 
-/* Toast */
 .toast-container {
   position: fixed; 
   top: 1rem; 
@@ -1054,8 +1417,9 @@ body::before {
 }
 
 .toast.success { border-left-color: var(--success); }
-.toast.error { border-left-color: var(--danger); }    
-  </style>
+.toast.error { border-left-color: var(--danger); }
+
+</style>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
