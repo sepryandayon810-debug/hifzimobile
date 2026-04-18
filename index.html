@@ -6,360 +6,1120 @@
   <meta name="theme-color" content="#6366f1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>WebPOS - Dashboard Mobile</title>
+  <title>WebPOS Mobile</title>
 
   <link rel="manifest" href="./manifest.json">
   <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js')</script>
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Inline CSS -->
   <style>
-/* Theme Colors */
-:root{--primary:#6366f1;--primary-dark:#4f46e5;--secondary:#ec4899;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#3b82f6;--bg-primary:#f8fafc;--bg-secondary:#f1f5f9;--bg-card:#fff;--text-primary:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;--border-color:#e2e8f0;--sidebar-width:280px;--header-height:60px;--bottom-nav-height:70px}
+    /* =========================================
+       DESIGN SYSTEM - MOBILE FIRST
+       ========================================= */
+    :root {
+      /* Primary Gradient */
+      --primary-start: #6366f1;
+      --primary-end: #8b5cf6;
+      --secondary-start: #ec4899;
+      --secondary-end: #f43f5e;
+      
+      /* Semantic Colors */
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+      
+      /* Background */
+      --bg-main: #f0f4f8;
+      --bg-card: rgba(255, 255, 255, 0.85);
+      --bg-glass: rgba(255, 255, 255, 0.6);
+      
+      /* Text */
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      
+      /* Border */
+      --border-color: rgba(148, 163, 184, 0.2);
+      
+      /* Layout */
+      --header-height: 70px;
+      --bottom-nav-height: 75px;
+      --safe-top: env(safe-area-inset-top);
+      --safe-bottom: env(safe-area-inset-bottom);
+      
+      /* Effects */
+      --shadow-soft: 0 4px 20px rgba(99, 102, 241, 0.08);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08);
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+    }
 
-[data-theme="dark"]{--bg-primary:#0f172a;--bg-secondary:#1e293b;--bg-card:#1e293b;--text-primary:#f8fafc;--text-secondary:#cbd5e1;--text-muted:#64748b;--border-color:#334155}
+    [data-theme="dark"] {
+      --bg-main: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.85);
+      --bg-glass: rgba(30, 41, 59, 0.6);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --border-color: rgba(148, 163, 184, 0.1);
+    }
 
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{font-size:16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-height:100vh;overflow-x:hidden}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    }
 
-/* Layout */
-.app-container{display:flex;min-height:100vh;flex-direction:column}
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg-main);
+      color: var(--text-primary);
+      overflow: hidden;
+      position: fixed;
+    }
 
-/* Mobile Header */
-.main-header{height:var(--header-height);background:var(--bg-card);border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;z-index:100;padding-top:env(safe-area-inset-top)}
-.header-left{display:flex;align-items:center;gap:12px}
-.header-title{font-size:18px;font-weight:700;color:var(--text-primary)}
-.header-actions{display:flex;align-items:center;gap:8px}
+    /* =========================================
+       APP CONTAINER
+       ========================================= */
+    #app {
+      width: 100vw;
+      height: 100vh;
+      height: -webkit-fill-available;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-attachment: fixed;
+    }
 
-.btn-icon{width:40px;height:40px;padding:0;border-radius:12px;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .15s}
-.btn-icon:active{background:rgba(99,102,241,.1);transform:scale(0.95)}
+    /* Background Pattern */
+    #app::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-.shift-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;background:rgba(239,68,68,.1);color:var(--danger)}
-.shift-badge.open{background:rgba(16,185,129,.1);color:var(--success)}
-.shift-badge::before{content:'';width:8px;height:8px;border-radius:50%;background:currentColor}
+    /* =========================================
+       HEADER - Glassmorphism
+       ========================================= */
+    .app-header {
+      flex-shrink: 0;
+      height: calc(var(--header-height) + var(--safe-top));
+      padding-top: var(--safe-top);
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 20px;
+      padding-right: 20px;
+      position: relative;
+      z-index: 100;
+    }
 
-/* Main Content */
-.main-content{flex:1;display:flex;flex-direction:column;min-height:calc(100vh - var(--header-height) - var(--bottom-nav-height))}
-.page-content{flex:1;padding:16px;padding-bottom:calc(var(--bottom-nav-height) + 20px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-/* Stats Cards - Horizontal Scroll */
-.stats-scroll{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:20px;padding-bottom:4px}
-.stats-scroll::-webkit-scrollbar{display:none}
+    .header-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
 
-.stat-card-mobile{flex-shrink:0;width:140px;background:var(--bg-card);border-radius:16px;padding:16px;border:1px solid var(--border-color);scroll-snap-align:start;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-.stat-card-mobile .stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px;color:white}
-.stat-icon.purple{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
-.stat-icon.green{background:linear-gradient(135deg,#10b981,#059669)}
-.stat-icon.orange{background:linear-gradient(135deg,#f59e0b,#d97706)}
-.stat-icon.pink{background:linear-gradient(135deg,#ec4899,#db2777)}
-.stat-icon.blue{background:linear-gradient(135deg,#3b82f6,#06b6d4)}
-.stat-icon.indigo{background:linear-gradient(135deg,#4f46e5,#6366f1)}
+    .header-title {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--text-primary), var(--primary-start));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-.stat-card-mobile .stat-value{font-size:18px;font-weight:800;color:var(--text-primary);margin-bottom:4px;letter-spacing:-0.5px}
-.stat-card-mobile .stat-label{font-size:11px;color:var(--text-secondary);font-weight:500}
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-/* Kas Card - Full Width */
-.kas-card{background:var(--bg-card);border-radius:20px;padding:20px;margin-bottom:20px;border:1px solid var(--border-color);box-shadow:0 4px 12px rgba(0,0,0,.05)}
-.kas-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.kas-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
-.kas-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:rgba(99,102,241,.1);color:var(--primary)}
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border: none;
+      background: var(--bg-card);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.2s;
+      border: 1px solid var(--border-color);
+    }
 
-.kas-amount{text-align:center;padding:20px 0;border-bottom:2px dashed var(--border-color);margin-bottom:16px}
-.kas-amount-label{font-size:12px;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
-.kas-amount-value{font-size:28px;font-weight:800;color:var(--primary);letter-spacing:-1px}
+    .icon-btn:active {
+      transform: scale(0.92);
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+    }
 
-.kas-breakdown{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.kas-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg-secondary);border-radius:12px}
-.kas-item-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.kas-item-icon.income{background:rgba(16,185,129,.1);color:var(--success)}
-.kas-item-icon.expense{background:rgba(239,68,68,.1);color:var(--danger)}
-.kas-item-icon.neutral{background:rgba(99,102,241,.1);color:var(--primary)}
+    .icon-btn.primary {
+      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+      color: white;
+      border: none;
+    }
 
-.kas-item-info{flex:1}
-.kas-item-label{font-size:11px;color:var(--text-secondary);margin-bottom:2px}
-.kas-item-value{font-size:13px;font-weight:700;color:var(--text-primary)}
-.kas-item-value.income{color:var(--success)}
-.kas-item-value.expense{color:var(--danger)}
+    .shift-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
 
-/* Laba Card - Highlight */
-.laba-card{background:linear-gradient(135deg,var(--success),#059669);border-radius:16px;padding:16px;color:white;margin-bottom:20px;box-shadow:0 4px 15px rgba(16,185,129,.3)}
-.laba-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.laba-label{font-size:12px;opacity:0.9;font-weight:500}
-.laba-icon{font-size:20px}
-.laba-value{font-size:24px;font-weight:800}
+    .shift-pill.open {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
 
-/* Quick Actions Grid */
-.section-title{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+    .shift-pill::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+    }
 
-.quick-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;text-decoration:none;color:var(--text-primary);font-size:13px;font-weight:600;transition:all .15s}
-.quick-btn:active{transform:scale(0.98);background:rgba(99,102,241,.05);border-color:var(--primary)}
-.quick-btn i{font-size:22px;color:var(--primary)}
-.quick-btn.primary{background:var(--primary);color:white;border-color:var(--primary)}
-.quick-btn.primary i{color:white}
-.quick-btn.success{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:var(--success)}
-.quick-btn.success i{color:var(--success)}
-.quick-btn.danger{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--danger)}
-.quick-btn.danger i{color:var(--danger)}
+    /* =========================================
+       MAIN CONTENT - Scrollable
+       ========================================= */
+    .app-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 20px;
+      padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 20px);
+      position: relative;
+      z-index: 1;
+    }
 
-/* Info Section */
-.info-card{background:var(--bg-card);border-radius:16px;padding:16px;border:1px solid var(--border-color);margin-bottom:20px}
-.info-title{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text-primary)}
-.info-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-color)}
-.info-item:last-child{border-bottom:none}
-.info-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;background:var(--bg-secondary)}
-.info-text{font-size:12px;color:var(--text-secondary);line-height:1.4}
+    /* =========================================
+       STATS GRID - 4 KOTAK (2x2)
+       ========================================= */
+    .stats-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
 
-/* Bottom Navigation */
-.mobile-nav{height:var(--bottom-nav-height);background:var(--bg-card);border-top:1px solid var(--border-color);display:flex;justify-content:space-around;align-items:center;padding:0 8px calc(env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;z-index:100}
+    .stat-box {
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      padding: 20px 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
 
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:100%;text-decoration:none;color:var(--text-secondary);font-size:11px;font-weight:500;transition:all .15s;border:none;background:none;cursor:pointer}
-.nav-item i{font-size:22px;margin-bottom:2px}
-.nav-item.active{color:var(--primary);font-weight:600}
-.nav-item:active{opacity:0.6}
+    .stat-box:active {
+      transform: scale(0.98);
+    }
 
-/* Menu Modal */
-.menu-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;visibility:hidden;transition:all .3s}
-.menu-modal.active{opacity:1;visibility:visible}
-.menu-sheet{position:fixed;left:0;top:0;bottom:0;width:280px;background:var(--bg-card);transform:translateX(-100%);transition:transform .3s cubic-bezier(0.4,0,0.2,1);z-index:201;display:flex;flex-direction:column;max-height:100vh;overflow-y:auto}
-.menu-modal.active .menu-sheet{transform:translateX(0)}
+    /* Decorative gradient line top */
+    .stat-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+      opacity: 0.8;
+    }
 
-.menu-header{padding:20px;border-bottom:1px solid var(--border-color);background:var(--bg-card);position:sticky;top:0;z-index:10}
-.menu-logo{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:800;color:var(--primary)}
-.menu-logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px}
+    .stat-box.success::before { background: linear-gradient(90deg, #10b981, #34d399); }
+    .stat-box.warning::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .stat-box.danger::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .stat-box.info::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
 
-.menu-close{position:absolute;right:16px;top:20px;width:32px;height:32px;border:none;background:var(--bg-secondary);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-secondary);cursor:pointer}
+    .stat-icon-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+      color: var(--primary-start);
+    }
 
-.menu-section{padding:16px;border-bottom:1px solid var(--border-color)}
-.menu-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:12px;padding:0 8px}
+    .stat-box.success .stat-icon-wrapper { 
+      background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(52,211,153,0.1));
+      color: var(--success);
+    }
+    .stat-box.warning .stat-icon-wrapper { 
+      background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(251,191,36,0.1));
+      color: var(--warning);
+    }
+    .stat-box.danger .stat-icon-wrapper { 
+      background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(248,113,113,0.1));
+      color: var(--danger);
+    }
 
-.menu-link{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500;margin-bottom:4px;transition:all .15s}
-.menu-link:active{background:rgba(99,102,241,.1);color:var(--primary)}
-.menu-link i{width:24px;text-align:center;font-size:16px}
-.menu-link.active{background:rgba(99,102,241,.1);color:var(--primary);font-weight:600}
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
 
-/* Toast */
-.toast{position:fixed;top:calc(var(--header-height) + 10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-100px);background:#333;color:white;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:500;z-index:3000;opacity:0;transition:all .3s;box-shadow:0 4px 12px rgba(0,0,0,.2)}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-.toast.success{background:var(--success)}
-.toast.error{background:var(--danger)}
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
 
-/* Loading */
-.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg-primary);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:4000;opacity:0;visibility:hidden;transition:all .25s}
-.loading-overlay.active{opacity:1;visibility:visible}
-.spinner{width:48px;height:48px;border:4px solid var(--border-color);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+    /* =========================================
+       KAS CARD - Large Featured
+       ========================================= */
+    .kas-featured {
+      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+      border-radius: var(--radius-xl);
+      padding: 28px 24px;
+      color: white;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
 
-/* Safe area untuk iPhone notch */
-@supports(padding-top:env(safe-area-inset-top)){
-  .main-header{padding-top:calc(8px + env(safe-area-inset-top));height:calc(var(--header-height) + env(safe-area-inset-top))}
-  .page-content{padding-top:calc(16px + env(safe-area-inset-top))}
-}
+    .kas-featured::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 200px;
+      height: 200px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      filter: blur(40px);
+    }
 
-/* Desktop Responsive */
-@media(min-width:769px){
-  .app-container{display:flex;flex-direction:row}
-  .main-content{margin-left:var(--sidebar-width)}
-  .mobile-nav{display:none}
-  .main-header{display:none}
-  .menu-toggle{display:none}
-  .page-content{padding-bottom:20px}
-}
+    .kas-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .kas-title {
+      font-size: 14px;
+      opacity: 0.9;
+      font-weight: 600;
+    }
+
+    .kas-badge {
+      background: rgba(255,255,255,0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      backdrop-filter: blur(10px);
+    }
+
+    .kas-amount-large {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .kas-breakdown-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .kas-mini-item {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .kas-mini-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .kas-mini-info {
+      flex: 1;
+    }
+
+    .kas-mini-label {
+      font-size: 10px;
+      opacity: 0.8;
+      margin-bottom: 2px;
+    }
+
+    .kas-mini-value {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* =========================================
+       SECTION HEADERS
+       ========================================= */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      margin-top: 24px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-action {
+      font-size: 13px;
+      color: var(--primary-start);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* =========================================
+       QUICK ACTIONS - Modern Grid
+       ========================================= */
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .action-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      text-decoration: none;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-card:active {
+      transform: translateY(2px);
+      box-shadow: none;
+    }
+
+    .action-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .action-card:active::after {
+      opacity: 1;
+    }
+
+    .action-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+      color: var(--primary-start);
+    }
+
+    .action-card.success .action-icon {
+      background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(52,211,153,0.1));
+      color: var(--success);
+    }
+    .action-card.danger .action-icon {
+      background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(248,113,113,0.1));
+      color: var(--danger);
+    }
+    .action-card.warning .action-icon {
+      background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(251,191,36,0.1));
+      color: var(--warning);
+    }
+
+    .action-label {
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* =========================================
+       INFO CARDS
+       ========================================= */
+    .info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .info-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-main);
+      border-radius: var(--radius-md);
+    }
+
+    .info-icon-small {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .info-icon-small.success { background: rgba(16,185,129,0.1); color: var(--success); }
+    .info-icon-small.danger { background: rgba(239,68,68,0.1); color: var(--danger); }
+    .info-icon-small.warning { background: rgba(245,158,11,0.1); color: var(--warning); }
+
+    .info-text-small {
+      flex: 1;
+    }
+
+    .info-label-small {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+    }
+
+    .info-desc-small {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* =========================================
+       BOTTOM NAVIGATION - Floating Style
+       ========================================= */
+    .bottom-nav {
+      flex-shrink: 0;
+      height: calc(var(--bottom-nav-height) + var(--safe-bottom));
+      padding-bottom: var(--safe-bottom);
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding-left: 10px;
+      padding-right: 10px;
+      position: relative;
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 100%;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s;
+      border-radius: 16px;
+      padding: 8px;
+    }
+
+    .nav-item i {
+      font-size: 22px;
+      margin-bottom: 2px;
+      transition: transform 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--primary-start);
+      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+    }
+
+    .nav-item.active i {
+      transform: translateY(-2px);
+    }
+
+    .nav-item:active {
+      opacity: 0.7;
+    }
+
+    /* Center FAB in bottom nav */
+    .nav-fab {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      margin-top: -30px;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+      border: 4px solid var(--bg-main);
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .nav-fab:active {
+      transform: scale(0.9);
+    }
+
+    /* =========================================
+       MENU MODAL - Full Screen Drawer
+       ========================================= */
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .menu-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .menu-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 85%;
+      max-width: 320px;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      z-index: 1001;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .menu-overlay.active .menu-drawer {
+      transform: translateX(0);
+    }
+
+    .menu-header {
+      padding: 24px;
+      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+      color: white;
+      position: relative;
+    }
+
+    .menu-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .menu-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .menu-avatar {
+      width: 50px;
+      height: 50px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .menu-user-info h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .menu-user-info p {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .menu-nav {
+      flex: 1;
+      padding: 16px;
+    }
+
+    .menu-section {
+      margin-bottom: 24px;
+    }
+
+    .menu-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding-left: 12px;
+    }
+
+    .menu-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 12px;
+      border-radius: 12px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      transition: all 0.15s;
+    }
+
+    .menu-link:hover, .menu-link.active {
+      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
+      color: var(--primary-start);
+    }
+
+    .menu-link i {
+      width: 24px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .menu-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .menu-logout {
+      width: 100%;
+      padding: 14px;
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    /* =========================================
+       TOAST NOTIFICATIONS
+       ========================================= */
+    .toast-container {
+      position: fixed;
+      top: calc(var(--header-height) + var(--safe-top) + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 90%;
+      max-width: 400px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border-left: 4px solid;
+      transform: translateY(-100px);
+      opacity: 0;
+      transition: all 0.3s;
+      pointer-events: auto;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success { border-left-color: var(--success); }
+    .toast.error { border-left-color: var(--danger); }
+    .toast.warning { border-left-color: var(--warning); }
+
+    .toast-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .toast.success .toast-icon { background: rgba(16,185,129,0.1); color: var(--success); }
+    .toast.error .toast-icon { background: rgba(239,68,68,0.1); color: var(--danger); }
+    .toast.warning .toast-icon { background: rgba(245,158,11,0.1); color: var(--warning); }
+
+    /* Loading */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--bg-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 5000;
+      transition: opacity 0.3s;
+    }
+
+    .loading-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner-modern {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(99, 102, 241, 0.1);
+      border-top-color: var(--primary-start);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Safe area untuk iPhone */
+    @supports (padding-top: env(safe-area-inset-top)) {
+      .app-header {
+        padding-top: env(safe-area-inset-top);
+        height: calc(70px + env(safe-area-inset-top));
+      }
+    }
   </style>
+<base target="_blank">
 </head>
 <body>
 
-<div class="app-container">
-  <!-- Mobile Header -->
-  <header class="main-header">
-    <div class="header-left">
-      <button class="btn-icon" id="btnMenu" title="Menu">
+<div id="app">
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-brand">
+      <button class="icon-btn" id="btnMenu" style="margin-left: -8px;">
         <i class="fas fa-bars"></i>
       </button>
-      <h1 class="header-title">Dashboard</h1>
+      <div class="header-logo">
+        <i class="fas fa-cash-register"></i>
+      </div>
+      <h1 class="header-title">WebPOS</h1>
     </div>
     
     <div class="header-actions">
-      <span class="shift-badge" id="shiftStatusBadge">
+      <span class="shift-pill" id="shiftStatusBadge">
         <span id="shiftTextBadge">Tutup</span>
       </span>
-      <button class="btn-icon" id="btnKasir" title="Buka Kasir" style="background:var(--primary);color:white;border-color:var(--primary)">
+      <button class="icon-btn primary" id="btnQuickKasir" title="Buka Kasir">
         <i class="fas fa-plus"></i>
       </button>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="page-content">
-      
-      <!-- Stats Horizontal Scroll -->
-      <div class="stats-scroll">
-        <div class="stat-card-mobile">
-          <div class="stat-icon purple">
-            <i class="fas fa-coins"></i>
-          </div>
-          <div class="stat-value" id="modalAwal">Rp 0</div>
-          <div class="stat-label">Modal Awal</div>
+  <!-- MAIN CONTENT -->
+  <main class="app-content">
+    <!-- 4 KOTAK STATISTIK (GRID 2x2) -->
+    <div class="stats-container">
+      <div class="stat-box info">
+        <div class="stat-icon-wrapper">
+          <i class="fas fa-coins"></i>
         </div>
-        
-        <div class="stat-card-mobile">
-          <div class="stat-icon green">
-            <i class="fas fa-receipt"></i>
-          </div>
-          <div class="stat-value" id="totalTransaksi">0</div>
-          <div class="stat-label">Transaksi</div>
-        </div>
-        
-        <div class="stat-card-mobile">
-          <div class="stat-icon blue">
-            <i class="fas fa-wallet"></i>
-          </div>
-          <div class="stat-value" id="kasGlobal">Rp 0</div>
-          <div class="stat-label">Kas Global</div>
-        </div>
-        
-        <div class="stat-card-mobile">
-          <div class="stat-icon pink">
-            <i class="fas fa-chart-line"></i>
-          </div>
-          <div class="stat-value" id="totalLaba">Rp 0</div>
-          <div class="stat-label">Laba</div>
-        </div>
-      </div>
-
-      <!-- Laba Card - Destak -->
-      <div class="laba-card">
-        <div class="laba-header">
-          <span class="laba-label">Total Laba Hari Ini</span>
-          <i class="fas fa-trending-up laba-icon"></i>
-        </div>
-        <div class="laba-value" id="labaValue">Rp 0</div>
-      </div>
-
-      <!-- Kas Card -->
-      <div class="kas-card">
-        <div class="kas-header">
-          <div class="kas-title">
-            <i class="fas fa-calculator" style="color:var(--primary)"></i>
-            Kas Hari Ini
-          </div>
-          <span class="kas-badge" id="kasDate">Hari Ini</span>
-        </div>
-        
-        <div class="kas-amount">
-          <div class="kas-amount-label">Total Kas di Tangan</div>
-          <div class="kas-amount-value" id="kasDitangan">Rp 0</div>
-        </div>
-        
-        <div class="kas-breakdown">
-          <div class="kas-item">
-            <div class="kas-item-icon income">
-              <i class="fas fa-arrow-down"></i>
-            </div>
-            <div class="kas-item-info">
-              <div class="kas-item-label">Masuk</div>
-              <div class="kas-item-value income" id="kasUangMasuk">+Rp 0</div>
-            </div>
-          </div>
-          
-          <div class="kas-item">
-            <div class="kas-item-icon expense">
-              <i class="fas fa-arrow-up"></i>
-            </div>
-            <div class="kas-item-info">
-              <div class="kas-item-label">Keluar</div>
-              <div class="kas-item-value expense" id="kasUangKeluar">-Rp 0</div>
-            </div>
-          </div>
-          
-          <div class="kas-item">
-            <div class="kas-item-icon income">
-              <i class="fas fa-shopping-cart"></i>
-            </div>
-            <div class="kas-item-info">
-              <div class="kas-item-label">Penjualan</div>
-              <div class="kas-item-value income" id="kasPenjualan">+Rp 0</div>
-            </div>
-          </div>
-          
-          <div class="kas-item">
-            <div class="kas-item-icon neutral">
-              <i class="fas fa-balance-scale"></i>
-            </div>
-            <div class="kas-item-info">
-              <div class="kas-item-label">Netto</div>
-              <div class="kas-item-value" id="kasNetto">Rp 0</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Actions -->
-      <div class="section-title">
-        <i class="fas fa-bolt" style="color:var(--warning)"></i>
-        Aksi Cepat
+        <div class="stat-value" id="modalAwal">Rp 0</div>
+        <div class="stat-label">Modal Awal</div>
       </div>
       
-      <div class="quick-grid">
-        <a href="page-kasir.html" class="quick-btn primary">
-          <i class="fas fa-cash-register"></i>
-          <span>Buka Kasir</span>
-        </a>
-        
-        <a href="page-produk.html" class="quick-btn">
-          <i class="fas fa-box"></i>
-          <span>Produk</span>
-        </a>
-        
-        <a href="page-kas-masuk.html" class="quick-btn success">
-          <i class="fas fa-arrow-down"></i>
-          <span>Kas Masuk</span>
-        </a>
-        
-        <a href="page-kas-keluar.html" class="quick-btn danger">
-          <i class="fas fa-arrow-up"></i>
-          <span>Kas Keluar</span>
-        </a>
-        
-        <a href="page-riwayat.html" class="quick-btn">
-          <i class="fas fa-history"></i>
-          <span>Riwayat</span>
-        </a>
-        
-        <button class="quick-btn" id="btnToggleShift" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--warning)">
-          <i class="fas fa-store" id="shiftIconBtn"></i>
-          <span id="shiftBtnText">Buka Shift</span>
-        </button>
+      <div class="stat-box warning">
+        <div class="stat-icon-wrapper">
+          <i class="fas fa-receipt"></i>
+        </div>
+        <div class="stat-value" id="totalTransaksi">0</div>
+        <div class="stat-label">Transaksi</div>
       </div>
+      
+      <div class="stat-box success">
+        <div class="stat-icon-wrapper">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="stat-value" id="totalLaba">Rp 0</div>
+        <div class="stat-label">Total Laba</div>
+      </div>
+      
+      <div class="stat-box danger">
+        <div class="stat-icon-wrapper">
+          <i class="fas fa-wallet"></i>
+        </div>
+        <div class="stat-value" id="kasGlobal">Rp 0</div>
+        <div class="stat-label">Kas Global</div>
+      </div>
+    </div>
 
-      <!-- Info Card -->
-      <div class="info-card">
-        <div class="info-title">Informasi</div>
-        <div class="info-item">
-          <div class="info-icon" style="color:var(--success)">
+    <!-- KAS FEATURED CARD -->
+    <div class="kas-featured">
+      <div class="kas-header-row">
+        <span class="kas-title">Kas di Tangan</span>
+        <span class="kas-badge" id="kasDate">Hari Ini</span>
+      </div>
+      <div class="kas-amount-large" id="kasDitangan">Rp 0</div>
+      
+      <div class="kas-breakdown-row">
+        <div class="kas-mini-item">
+          <div class="kas-mini-icon">
             <i class="fas fa-arrow-down"></i>
           </div>
-          <div class="info-text">Uang Masuk = Modal tambahan atau pemasukan diluar penjualan</div>
+          <div class="kas-mini-info">
+            <div class="kas-mini-label">Masuk</div>
+            <div class="kas-mini-value" id="kasMasukMini">+Rp 0</div>
+          </div>
         </div>
-        <div class="info-item">
-          <div class="info-icon" style="color:var(--danger)">
+        
+        <div class="kas-mini-item">
+          <div class="kas-mini-icon">
             <i class="fas fa-arrow-up"></i>
           </div>
-          <div class="info-text">Uang Keluar = Pengeluaran operasional dari kas tangan</div>
+          <div class="kas-mini-info">
+            <div class="kas-mini-label">Keluar</div>
+            <div class="kas-mini-value" id="kasKeluarMini">-Rp 0</div>
+          </div>
         </div>
       </div>
-      
-      <!-- Spacer untuk bottom nav -->
-      <div style="height:20px"></div>
     </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="section-header">
+      <div class="section-title">
+        <i class="fas fa-bolt" style="color: var(--warning);"></i>
+        Aksi Cepat
+      </div>
+    </div>
+    
+    <div class="quick-actions-grid">
+      <a href="page-kasir.html" class="action-card">
+        <div class="action-icon">
+          <i class="fas fa-cash-register"></i>
+        </div>
+        <span class="action-label">Buka Kasir</span>
+      </a>
+      
+      <a href="page-produk.html" class="action-card success">
+        <div class="action-icon">
+          <i class="fas fa-box"></i>
+        </div>
+        <span class="action-label">Produk</span>
+      </a>
+      
+      <a href="page-kas-masuk.html" class="action-card success">
+        <div class="action-icon">
+          <i class="fas fa-arrow-down"></i>
+        </div>
+        <span class="action-label">Kas Masuk</span>
+      </a>
+      
+      <a href="page-kas-keluar.html" class="action-card danger">
+        <div class="action-icon">
+          <i class="fas fa-arrow-up"></i>
+        </div>
+        <span class="action-label">Kas Keluar</span>
+      </a>
+      
+      <a href="page-riwayat.html" class="action-card">
+        <div class="action-icon">
+          <i class="fas fa-history"></i>
+        </div>
+        <span class="action-label">Riwayat</span>
+      </a>
+      
+      <button class="action-card warning" id="btnToggleShift" style="border: none; background: var(--bg-card); width: 100%; cursor: pointer;">
+        <div class="action-icon">
+          <i class="fas fa-store" id="shiftIconAction"></i>
+        </div>
+        <span class="action-label" id="shiftActionText">Buka Shift</span>
+      </button>
+    </div>
+
+    <!-- INFO CARD -->
+    <div class="info-card">
+      <div class="info-title">
+        <i class="fas fa-info-circle" style="color: var(--info);"></i>
+        Informasi Kas
+      </div>
+      <div class="info-list">
+        <div class="info-item">
+          <div class="info-icon-small success">
+            <i class="fas fa-arrow-down"></i>
+          </div>
+          <div class="info-text-small">
+            <div class="info-label-small">Uang Masuk</div>
+            <div class="info-desc-small">Pemasukan diluar penjualan & modal</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon-small danger">
+            <i class="fas fa-arrow-up"></i>
+          </div>
+          <div class="info-text-small">
+            <div class="info-label-small">Uang Keluar</div>
+            <div class="info-desc-small">Pengeluaran operasional dari kas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPACER -->
+    <div style="height: 20px;"></div>
   </main>
 
-  <!-- Bottom Navigation -->
-  <nav class="mobile-nav">
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
     <a href="index.html" class="nav-item active">
       <i class="fas fa-home"></i>
       <span>Beranda</span>
@@ -367,6 +1127,9 @@ body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-
     <a href="page-kasir.html" class="nav-item">
       <i class="fas fa-cash-register"></i>
       <span>Kasir</span>
+    </a>
+    <a href="page-kasir.html" class="nav-fab">
+      <i class="fas fa-plus"></i>
     </a>
     <a href="page-produk.html" class="nav-item">
       <i class="fas fa-box"></i>
@@ -379,72 +1142,149 @@ body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-
   </nav>
 </div>
 
-<!-- Menu Modal (Slide dari kiri) -->
-<div class="menu-modal" id="menuModal">
-  <div class="menu-sheet">
+<!-- MENU DRAWER MODAL -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="menu-drawer">
     <div class="menu-header">
-      <div class="menu-logo">
-        <div class="menu-logo-icon">
-          <i class="fas fa-cash-register"></i>
-        </div>
-        WebPOS
-      </div>
       <button class="menu-close" id="closeMenu">
         <i class="fas fa-times"></i>
       </button>
+      <div class="menu-user">
+        <div class="menu-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="menu-user-info">
+          <h3 id="menuUserName">Loading...</h3>
+          <p id="menuUserRole">Administrator</p>
+        </div>
+      </div>
     </div>
     
-    <div class="menu-section">
-      <div class="menu-section-title">Utama</div>
-      <a href="index.html" class="menu-link active">
-        <i class="fas fa-home"></i>
-        <span>Dashboard</span>
-      </a>
-      <a href="page-kasir.html" class="menu-link">
-        <i class="fas fa-cash-register"></i>
-        <span>Kasir</span>
-      </a>
-      <a href="page-produk.html" class="menu-link">
-        <i class="fas fa-box"></i>
-        <span>Produk</span>
-      </a>
+    <div class="menu-nav">
+      <!-- Utama -->
+      <div class="menu-section">
+        <div class="menu-section-title">Utama</div>
+        <a href="index.html" class="menu-link active">
+          <i class="fas fa-home"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="page-kasir.html" class="menu-link">
+          <i class="fas fa-cash-register"></i>
+          <span>Kasir</span>
+        </a>
+        <a href="page-produk.html" class="menu-link">
+          <i class="fas fa-box"></i>
+          <span>Produk</span>
+        </a>
+      </div>
+
+      <!-- Transaksi -->
+      <div class="menu-section">
+        <div class="menu-section-title">Transaksi</div>
+        <a href="page-riwayat.html" class="menu-link">
+          <i class="fas fa-history"></i>
+          <span>Riwayat Transaksi</span>
+        </a>
+        <a href="page-kas.html" class="menu-link">
+          <i class="fas fa-wallet"></i>
+          <span>Ringkasan Kas</span>
+        </a>
+        <a href="page-modal-harian.html" class="menu-link">
+          <i class="fas fa-coins"></i>
+          <span>Modal Harian</span>
+        </a>
+        <a href="page-kas-masuk.html" class="menu-link">
+          <i class="fas fa-arrow-down"></i>
+          <span>Kas Masuk</span>
+        </a>
+        <a href="page-kas-keluar.html" class="menu-link">
+          <i class="fas fa-arrow-up"></i>
+          <span>Kas Keluar</span>
+        </a>
+        <a href="page-kas-shift.html" class="menu-link">
+          <i class="fas fa-clock"></i>
+          <span>Kas & Shift</span>
+        </a>
+        <a href="page-kas-topup.html" class="menu-link">
+          <i class="fas fa-plus-circle"></i>
+          <span>Top Up</span>
+        </a>
+        <a href="page-kas-tarik.html" class="menu-link">
+          <i class="fas fa-minus-circle"></i>
+          <span>Tarik Tunai</span>
+        </a>
+        <a href="page-pembelian.html" class="menu-link">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Pembelian / Restock</span>
+        </a>
+        <a href="page-hutang.html" class="menu-link">
+          <i class="fas fa-hand-holding-usd"></i>
+          <span>Hutang & Piutang</span>
+        </a>
+      </div>
+
+      <!-- Laporan -->
+      <div class="menu-section">
+        <div class="menu-section-title">Laporan</div>
+        <a href="page-laporan.html" class="menu-link">
+          <i class="fas fa-chart-bar"></i>
+          <span>Laporan Penjualan</span>
+        </a>
+        <a href="page-laporan-stok.html" class="menu-link">
+          <i class="fas fa-boxes"></i>
+          <span>Laporan Stok</span>
+        </a>
+        <a href="page-laporan-terlaris.html" class="menu-link">
+          <i class="fas fa-crown"></i>
+          <span>Barang Terlaris</span>
+        </a>
+      </div>
+
+      <!-- Integrasi -->
+      <div class="menu-section">
+        <div class="menu-section-title">Integrasi</div>
+        <a href="page-saldo-telegram.html" class="menu-link">
+          <i class="fab fa-telegram"></i>
+          <span>Saldo Telegram</span>
+        </a>
+        <a href="page-data-pelanggan.html" class="menu-link">
+          <i class="fas fa-users"></i>
+          <span>Data Pelanggan</span>
+        </a>
+      </div>
+
+      <!-- Sistem -->
+      <div class="menu-section">
+        <div class="menu-section-title">Sistem</div>
+        <a href="page-pengguna.html" class="menu-link">
+          <i class="fas fa-user-cog"></i>
+          <span>Pengguna</span>
+        </a>
+        <a href="page-setting.html" class="menu-link">
+          <i class="fas fa-cog"></i>
+          <span>Pengaturan</span>
+        </a>
+        <a href="page-backup.html" class="menu-link">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>Backup & Sync</span>
+        </a>
+        <a href="page-log-aktivitas.html" class="menu-link">
+          <i class="fas fa-history"></i>
+          <span>Log Aktivitas</span>
+        </a>
+        <a href="page-printer.html" class="menu-link">
+          <i class="fas fa-print"></i>
+          <span>Printer & Struk</span>
+        </a>
+        <a href="page-reset.html" class="menu-link">
+          <i class="fas fa-trash-alt"></i>
+          <span>Reset Data</span>
+        </a>
+      </div>
     </div>
     
-    <div class="menu-section">
-      <div class="menu-section-title">Transaksi</div>
-      <a href="page-riwayat.html" class="menu-link">
-        <i class="fas fa-history"></i>
-        <span>Riwayat</span>
-      </a>
-      <a href="page-kas-masuk.html" class="menu-link">
-        <i class="fas fa-arrow-down"></i>
-        <span>Kas Masuk</span>
-      </a>
-      <a href="page-kas-keluar.html" class="menu-link">
-        <i class="fas fa-arrow-up"></i>
-        <span>Kas Keluar</span>
-      </a>
-      <a href="page-hutang.html" class="menu-link">
-        <i class="fas fa-hand-holding-usd"></i>
-        <span>Hutang</span>
-      </a>
-    </div>
-    
-    <div class="menu-section">
-      <div class="menu-section-title">Laporan</div>
-      <a href="page-laporan.html" class="menu-link">
-        <i class="fas fa-chart-bar"></i>
-        <span>Laporan Penjualan</span>
-      </a>
-    </div>
-    
-    <div class="menu-section">
-      <div class="menu-section-title">Sistem</div>
-      <a href="page-setting.html" class="menu-link">
-        <i class="fas fa-cog"></i>
-        <span>Pengaturan</span>
-      </a>
-      <button class="menu-link" id="btnLogout" style="width:100%;border:none;background:none;cursor:pointer;text-align:left">
+    <div class="menu-footer">
+      <button class="menu-logout" id="btnMenuLogout">
         <i class="fas fa-sign-out-alt"></i>
         <span>Logout</span>
       </button>
@@ -452,94 +1292,183 @@ body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-
   </div>
 </div>
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
 
-<!-- Loading -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="spinner"></div>
-  <p style="margin-top:12px;color:var(--text-secondary)">Loading...</p>
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="spinner-modern"></div>
+  <p style="margin-top: 16px; color: var(--text-secondary); font-weight: 600;">Loading...</p>
 </div>
 
-<!-- Scripts -->
-<script src="js/firebase-config.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/auth.js"></script>
+<!-- FIREBASE & SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
 <script>
-  // Mobile optimized dashboard
+  // ==========================================
+  // FIREBASE CONFIG - SAMAKAN DENGAN FILE ASLI
+  // ==========================================
+  const firebaseConfig = {
+    // GANTI DENGAN CONFIG ASLI ANDA
+    apiKey: "YOUR_API_KEY",
+    authDomain: "your-project.firebaseapp.com",
+    databaseURL: "https://your-project-default-rtdb.firebaseio.com",
+    projectId: "your-project",
+    storageBucket: "your-project.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abcdef123456"
+  };
+  
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  
+  const auth = firebase.auth();
+  const database = firebase.database();
+
+  // ==========================================
+  // UTILS (Simplified dari file asli)
+  // ==========================================
+  const Utils = {
+    formatRupiah: (num) => {
+      return 'Rp ' + (num || 0).toLocaleString('id-ID');
+    },
+    formatNumber: (num) => {
+      return (num || 0).toLocaleString('id-ID');
+    },
+    getTodayString: () => {
+      return new Date().toISOString().split('T')[0];
+    },
+    getStorage: (key) => {
+      try {
+        return localStorage.getItem(key);
+      } catch (e) {
+        return null;
+      }
+    },
+    setStorage: (key, val) => {
+      try {
+        localStorage.setItem(key, val);
+      } catch (e) {}
+    },
+    showToast: (msg, type = 'info') => {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <div class="toast-icon"><i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation' : 'info'}"></i></div>
+        <span>${msg}</span>
+      `;
+      container.appendChild(toast);
+      
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  };
+
+  // ==========================================
+  // AUTH (Simplified)
+  // ==========================================
+  const Auth = {
+    getCurrentUser: () => {
+      return auth.currentUser || JSON.parse(localStorage.getItem('webpos_user') || '{}');
+    },
+    logout: () => {
+      auth.signOut();
+      localStorage.removeItem('webpos_user');
+      localStorage.removeItem('webpos_session');
+      window.location.href = 'login.html';
+    }
+  };
+
+  // ==========================================
+  // MAIN APP
+  // ==========================================
   document.addEventListener('DOMContentLoaded', () => {
     // Auth check
     auth.onAuthStateChanged((user) => {
-      if (!user && !localStorage.getItem('webpos_session')) {
+      if (!user && !Utils.getStorage('webpos_session')) {
         window.location.href = 'login.html';
         return;
       }
-      initMobileDashboard();
+      
+      if (user) {
+        // Update user info
+        document.getElementById('menuUserName').textContent = user.displayName || user.email || 'User';
+        document.getElementById('menuUserRole').textContent = 'Administrator';
+      }
+      
+      initApp();
     });
   });
 
-  function initMobileDashboard() {
+  function initApp() {
     let isShiftOpen = false;
-    let todayStats = {
-      modalAwal: 0,
-      penjualan: 0,
-      kasMasuk: 0,
-      kasKeluar: 0,
-      laba: 0,
-      transaksiCount: 0
-    };
-
-    // Elements
+    
+    // DOM Elements
     const btnMenu = document.getElementById('btnMenu');
-    const menuModal = document.getElementById('menuModal');
+    const menuOverlay = document.getElementById('menuOverlay');
     const closeMenu = document.getElementById('closeMenu');
-    const btnKasir = document.getElementById('btnKasir');
+    const btnQuickKasir = document.getElementById('btnQuickKasir');
     const btnToggleShift = document.getElementById('btnToggleShift');
-    const shiftStatusBadge = document.getElementById('shiftStatusBadge');
-    const shiftTextBadge = document.getElementById('shiftTextBadge');
-    const shiftIconBtn = document.getElementById('shiftIconBtn');
-    const shiftBtnText = document.getElementById('shiftBtnText');
-    const btnLogout = document.getElementById('btnLogout');
+    const btnMenuLogout = document.getElementById('btnMenuLogout');
+    const loadingScreen = document.getElementById('loadingScreen');
 
-    // Toggle Menu
+    // Hide loading
+    setTimeout(() => loadingScreen.classList.add('hidden'), 500);
+
+    // Menu Toggle
     btnMenu.addEventListener('click', () => {
-      menuModal.classList.add('active');
+      menuOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
     });
 
-    closeMenu.addEventListener('click', () => {
-      menuModal.classList.remove('active');
+    closeMenu.addEventListener('click', closeMenuFunc);
+    menuOverlay.addEventListener('click', (e) => {
+      if (e.target === menuOverlay) closeMenuFunc();
     });
 
-    menuModal.addEventListener('click', (e) => {
-      if (e.target === menuModal) menuModal.classList.remove('active');
-    });
+    function closeMenuFunc() {
+      menuOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
 
-    // Kasir Button (Header FAB)
-    btnKasir.addEventListener('click', () => {
+    // Quick Kasir
+    btnQuickKasir.addEventListener('click', () => {
       window.location.href = 'page-kasir.html';
     });
 
     // Logout
-    btnLogout.addEventListener('click', () => {
-      if (confirm('Logout?')) {
-        auth.signOut();
-        localStorage.removeItem('webpos_session');
-        window.location.href = 'login.html';
+    btnMenuLogout.addEventListener('click', () => {
+      if (confirm('Yakin ingin logout?')) {
+        Auth.logout();
       }
     });
 
-    // Load Data
+    // Load Dashboard Data
     loadDashboardData();
     listenShiftStatus();
 
     async function loadDashboardData() {
-      showLoading();
-      
       try {
-        const today = new Date().toISOString().split('T')[0];
-        const user = auth.currentUser;
+        const today = Utils.getTodayString();
+        const user = Auth.getCurrentUser();
         
+        let stats = {
+          modalAwal: 0,
+          penjualan: 0,
+          kasMasuk: 0,
+          kasKeluar: 0,
+          laba: 0,
+          transaksiCount: 0
+        };
+
         // Load transactions
         const transSnapshot = await database.ref('transactions/' + today).once('value');
         const transactions = transSnapshot.val() || {};
@@ -548,15 +1477,24 @@ body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-
           if (trans.status !== 'cancelled' && trans.status !== 'voided') {
             switch(trans.type) {
               case 'penjualan':
-                todayStats.penjualan += trans.total || 0;
-                todayStats.laba += trans.profit || 0;
-                todayStats.transaksiCount++;
+                stats.penjualan += trans.total || 0;
+                stats.laba += trans.profit || 0;
+                stats.transaksiCount++;
                 break;
               case 'kas_masuk':
-                todayStats.kasMasuk += trans.amount || 0;
+                stats.kasMasuk += trans.amount || 0;
                 break;
               case 'kas_keluar':
-                todayStats.kasKeluar += trans.amount || 0;
+                stats.kasKeluar += trans.amount || 0;
+                break;
+              case 'topup':
+                stats.kasMasuk += trans.amount || 0;
+                stats.laba += trans.adminFee || 0;
+                stats.transaksiCount++;
+                break;
+              case 'tarik':
+                stats.kasKeluar += trans.amount || 0;
+                stats.laba += trans.adminFee || 0;
                 break;
             }
           }
@@ -565,35 +1503,30 @@ body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-
         // Load modal
         const modalSnapshot = await database.ref('modal/' + today + '/' + user.uid).once('value');
         const modalData = modalSnapshot.val();
-        todayStats.modalAwal = modalData ? modalData.amount : 0;
+        stats.modalAwal = modalData ? modalData.amount : 0;
 
         // Calculate
-        const kasGlobal = todayStats.modalAwal + todayStats.kasMasuk - todayStats.kasKeluar + todayStats.penjualan;
-        const kasNetto = todayStats.kasMasuk - todayStats.kasKeluar + todayStats.penjualan;
+        const kasGlobal = stats.modalAwal + stats.kasMasuk - stats.kasKeluar + stats.penjualan;
+        const kasNetto = stats.kasMasuk - stats.kasKeluar + stats.penjualan;
 
         // Update UI
-        document.getElementById('modalAwal').textContent = formatRupiah(todayStats.modalAwal);
-        document.getElementById('totalTransaksi').textContent = todayStats.transaksiCount;
-        document.getElementById('totalLaba').textContent = formatRupiah(todayStats.laba);
-        document.getElementById('labaValue').textContent = formatRupiah(todayStats.laba);
-        document.getElementById('kasGlobal').textContent = formatRupiah(kasGlobal);
-        document.getElementById('kasDitangan').textContent = formatRupiah(kasGlobal);
-        document.getElementById('kasUangMasuk').textContent = '+' + formatRupiah(todayStats.kasMasuk);
-        document.getElementById('kasUangKeluar').textContent = '-' + formatRupiah(todayStats.kasKeluar);
-        document.getElementById('kasPenjualan').textContent = '+' + formatRupiah(todayStats.penjualan);
-        document.getElementById('kasNetto').textContent = formatRupiah(kasNetto);
+        document.getElementById('modalAwal').textContent = Utils.formatRupiah(stats.modalAwal);
+        document.getElementById('totalTransaksi').textContent = Utils.formatNumber(stats.transaksiCount);
+        document.getElementById('totalLaba').textContent = Utils.formatRupiah(stats.laba);
+        document.getElementById('kasGlobal').textContent = Utils.formatRupiah(kasGlobal);
+        document.getElementById('kasDitangan').textContent = Utils.formatRupiah(kasGlobal);
+        document.getElementById('kasMasukMini').textContent = '+' + Utils.formatRupiah(stats.kasMasuk);
+        document.getElementById('kasKeluarMini').textContent = '-' + Utils.formatRupiah(stats.kasKeluar);
 
       } catch (error) {
         console.error('Error:', error);
-        showToast('Gagal memuat data', 'error');
+        Utils.showToast('Gagal memuat data', 'error');
       }
-      
-      hideLoading();
     }
 
     function listenShiftStatus() {
-      const today = new Date().toISOString().split('T')[0];
-      const user = auth.currentUser;
+      const today = Utils.getTodayString();
+      const user = Auth.getCurrentUser();
       
       if (!user) return;
       
@@ -605,22 +1538,21 @@ body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-
     }
 
     function updateShiftUI() {
+      const shiftStatusBadge = document.getElementById('shiftStatusBadge');
+      const shiftTextBadge = document.getElementById('shiftTextBadge');
+      const shiftIconAction = document.getElementById('shiftIconAction');
+      const shiftActionText = document.getElementById('shiftActionText');
+
       if (isShiftOpen) {
         shiftStatusBadge.classList.add('open');
         shiftTextBadge.textContent = 'Buka';
-        shiftBtnText.textContent = 'Tutup Shift';
-        shiftIconBtn.className = 'fas fa-store-slash';
-        btnToggleShift.style.color = 'var(--danger)';
-        btnToggleShift.style.background = 'rgba(239,68,68,.1)';
-        btnToggleShift.style.borderColor = 'rgba(239,68,68,.3)';
+        shiftActionText.textContent = 'Tutup Shift';
+        shiftIconAction.className = 'fas fa-store-slash';
       } else {
         shiftStatusBadge.classList.remove('open');
         shiftTextBadge.textContent = 'Tutup';
-        shiftBtnText.textContent = 'Buka Shift';
-        shiftIconBtn.className = 'fas fa-store';
-        btnToggleShift.style.color = 'var(--warning)';
-        btnToggleShift.style.background = 'rgba(245,158,11,.1)';
-        btnToggleShift.style.borderColor = 'rgba(245,158,11,.3)';
+        shiftActionText.textContent = 'Buka Shift';
+        shiftIconAction.className = 'fas fa-store';
       }
     }
 
@@ -629,12 +1561,13 @@ body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-
         window.location.href = 'page-kas-shift.html';
       } else {
         try {
-          const today = new Date().toISOString().split('T')[0];
-          const user = auth.currentUser;
+          const today = Utils.getTodayString();
+          const user = Auth.getCurrentUser();
           
+          // Check modal
           const modalSnapshot = await database.ref('modal/' + today + '/' + user.uid).once('value');
           if (!modalSnapshot.val()) {
-            showToast('Set modal dulu!', 'warning');
+            Utils.showToast('Set modal dulu!', 'warning');
             window.location.href = 'page-modal-harian.html';
             return;
           }
@@ -642,35 +1575,16 @@ body{background:var(--bg-primary);color:var(--text-primary);line-height:1.6;min-
           await database.ref('shifts/' + today + '/' + user.uid).set({
             status: 'open',
             openTime: Date.now(),
-            userId: user.uid
+            userId: user.uid,
+            modalAwal: modalSnapshot.val().amount
           });
           
-          showToast('Shift dibuka!', 'success');
+          Utils.showToast('Shift dibuka!', 'success');
         } catch (error) {
-          showToast('Gagal buka shift', 'error');
+          Utils.showToast('Gagal buka shift', 'error');
         }
       }
     });
-
-    // Helpers
-    function formatRupiah(num) {
-      return 'Rp ' + (num || 0).toLocaleString('id-ID');
-    }
-
-    function showToast(msg, type='info') {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.className = 'toast ' + type + ' show';
-      setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
-    function showLoading() {
-      document.getElementById('loadingOverlay').classList.add('active');
-    }
-
-    function hideLoading() {
-      document.getElementById('loadingOverlay').classList.remove('active');
-    }
   }
 </script>
 
