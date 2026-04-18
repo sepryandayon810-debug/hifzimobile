@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <!-- CRITICAL: Meta viewport untuk mobile full screen -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>WebPOS Mobile</title>
+  
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* =========================================
+       MOBILE FIRST - BASE STYLES
+       ========================================= */
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --header-height: 60px;
+      --bottom-nav-height: 70px;
+      --safe-area-top: env(safe-area-inset-top);
+      --safe-area-bottom: env(safe-area-inset-bottom);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-card: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: -webkit-fill-available;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      overflow: hidden;
+      position: fixed;
+      overscroll-behavior-y: none;
+    }
+
+    /* =========================================
+       APP CONTAINER - Full Screen Layout
+       ========================================= */
+    #app {
+      width: 100vw;
+      height: 100vh;
+      height: -webkit-fill-available;
+      display: flex;
+      flex-direction: column;
+      padding-top: var(--safe-area-top);
+      padding-bottom: var(--safe-area-bottom);
+    }
+
+    /* =========================================
+       HEADER - Fixed Top
+       ========================================= */
+    .app-header {
+      flex-shrink: 0;
+      height: var(--header-height);
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      position: relative;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .header-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: transparent;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .header-btn:active {
+      background: rgba(99, 102, 241, 0.1);
+      transform: scale(0.95);
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      flex: 1;
+      text-align: center;
+      margin-right: 40px; /* Balance untuk header-btn kiri */
+    }
+
+    .shift-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .shift-badge.open {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .shift-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* =========================================
+       SCROLLABLE CONTENT
+       ========================================= */
+    .app-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px;
+      padding-bottom: calc(var(--bottom-nav-height) + 20px);
+    }
+
+    /* =========================================
+       MOBILE STATS CARDS - Horizontal Scroll
+       ========================================= */
+    .stats-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin: 0 -12px;
+      padding: 0 12px 12px;
+    }
+
+    .stats-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .stat-card-mobile {
+      flex-shrink: 0;
+      width: 160px;
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      scroll-snap-align: start;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .stat-card-mobile .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: white;
+    }
+
+    .stat-icon.purple { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .stat-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+    .stat-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .stat-icon.pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+    .stat-card-mobile .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .stat-card-mobile .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* =========================================
+       KAS CARD - Main Feature
+       ========================================= */
+    .kas-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 16px 0;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .kas-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .kas-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kas-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary);
+    }
+
+    .kas-amount {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 2px dashed var(--border-color);
+      margin-bottom: 16px;
+    }
+
+    .kas-amount-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .kas-amount-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    .kas-breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .kas-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: var(--bg-primary);
+      border-radius: 12px;
+    }
+
+    .kas-item-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .kas-item-icon.income { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .kas-item-icon.expense { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .kas-item-icon.neutral { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
+
+    .kas-item-info {
+      flex: 1;
+    }
+
+    .kas-item-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+    }
+
+    .kas-item-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .kas-item-value.income { color: var(--success); }
+    .kas-item-value.expense { color: var(--danger); }
+
+    /* =========================================
+       QUICK ACTIONS - Grid
+       ========================================= */
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 24px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .quick-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .quick-btn:active {
+      transform: scale(0.98);
+      background: rgba(99, 102, 241, 0.05);
+      border-color: var(--primary);
+    }
+
+    .quick-btn i {
+      font-size: 24px;
+      color: var(--primary);
+    }
+
+    .quick-btn.primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .quick-btn.primary i {
+      color: white;
+    }
+
+    .quick-btn.success {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: var(--success);
+    }
+
+    .quick-btn.success i {
+      color: var(--success);
+    }
+
+    .quick-btn.danger {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+    }
+
+    .quick-btn.danger i {
+      color: var(--danger);
+    }
+
+    /* =========================================
+       BOTTOM NAVIGATION - Fixed Bottom
+       ========================================= */
+    .bottom-nav {
+      flex-shrink: 0;
+      height: var(--bottom-nav-height);
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 8px calc(var(--safe-area-bottom));
+      position: relative;
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 100%;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 500;
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 4px;
+    }
+
+    .nav-item i {
+      font-size: 22px;
+      margin-bottom: 2px;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item:active {
+      opacity: 0.6;
+    }
+
+    /* =========================================
+       FLOATING ACTION BUTTON (FAB)
+       ========================================= */
+    .fab {
+      position: fixed;
+      bottom: calc(var(--bottom-nav-height) + 16px + var(--safe-area-bottom));
+      right: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+      z-index: 90;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .fab:active {
+      transform: scale(0.92);
+    }
+
+    /* =========================================
+       MODAL BOTTOM SHEET (Mobile Style)
+       ========================================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border-radius: 24px 24px 0 0;
+      padding: 20px;
+      padding-bottom: calc(20px + var(--safe-area-bottom));
+      z-index: 1001;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active .modal-sheet {
+      transform: translateY(0);
+    }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    /* Dark mode toggle button di header */
+    .theme-toggle {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: none;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      top: calc(var(--header-height) + 10px + var(--safe-area-top));
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: #333;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-left">
+      <button class="header-btn" id="btnMenu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <h1 class="header-title">WebPOS</h1>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="shift-badge" id="shiftStatus">
+        <span id="shiftText">Tutup</span>
+      </span>
+      <button class="theme-toggle" id="btnTheme">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- SCROLLABLE CONTENT -->
+  <main class="app-content">
+    <!-- Stats Horizontal Scroll -->
+    <div class="stats-scroll">
+      <div class="stat-card-mobile">
+        <div class="stat-icon purple">
+          <i class="fas fa-coins"></i>
+        </div>
+        <div class="stat-value" id="modalAwal">Rp 0</div>
+        <div class="stat-label">Modal Awal</div>
+      </div>
+      
+      <div class="stat-card-mobile">
+        <div class="stat-icon green">
+          <i class="fas fa-receipt"></i>
+        </div>
+        <div class="stat-value" id="totalTransaksi">0</div>
+        <div class="stat-label">Transaksi</div>
+      </div>
+      
+      <div class="stat-card-mobile">
+        <div class="stat-icon orange">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="stat-value" id="totalLaba">Rp 0</div>
+        <div class="stat-label">Laba</div>
+      </div>
+      
+      <div class="stat-card-mobile">
+        <div class="stat-icon pink">
+          <i class="fas fa-wallet"></i>
+        </div>
+        <div class="stat-value" id="kasGlobal">Rp 0</div>
+        <div class="stat-label">Kas Global</div>
+      </div>
+    </div>
+
+    <!-- Kas Calculation Card -->
+    <div class="kas-card">
+      <div class="kas-header">
+        <div class="kas-title">
+          <i class="fas fa-calculator" style="color: var(--primary);"></i>
+          Kas Hari Ini
+        </div>
+        <span class="kas-badge" id="kasDate">Hari Ini</span>
+      </div>
+      
+      <div class="kas-amount">
+        <div class="kas-amount-label">Total Kas di Tangan</div>
+        <div class="kas-amount-value" id="kasDitangan">Rp 0</div>
+      </div>
+      
+      <div class="kas-breakdown">
+        <div class="kas-item">
+          <div class="kas-item-icon income">
+            <i class="fas fa-arrow-down"></i>
+          </div>
+          <div class="kas-item-info">
+            <div class="kas-item-label">Masuk</div>
+            <div class="kas-item-value income" id="kasUangMasuk">+Rp 0</div>
+          </div>
+        </div>
+        
+        <div class="kas-item">
+          <div class="kas-item-icon expense">
+            <i class="fas fa-arrow-up"></i>
+          </div>
+          <div class="kas-item-info">
+            <div class="kas-item-label">Keluar</div>
+            <div class="kas-item-value expense" id="kasUangKeluar">-Rp 0</div>
+          </div>
+        </div>
+        
+        <div class="kas-item">
+          <div class="kas-item-icon income">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <div class="kas-item-info">
+            <div class="kas-item-label">Penjualan</div>
+            <div class="kas-item-value income" id="kasPenjualan">+Rp 0</div>
+          </div>
+        </div>
+        
+        <div class="kas-item">
+          <div class="kas-item-icon neutral">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div class="kas-item-info">
+            <div class="kas-item-label">Netto</div>
+            <div class="kas-item-value" id="kasNetto">Rp 0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-title">
+      <i class="fas fa-bolt" style="color: var(--warning);"></i>
+      Aksi Cepat
+    </div>
+    
+    <div class="quick-grid">
+      <a href="page-kasir.html" class="quick-btn primary">
+        <i class="fas fa-cash-register"></i>
+        <span>Buka Kasir</span>
+      </a>
+      
+      <a href="page-produk.html" class="quick-btn">
+        <i class="fas fa-plus"></i>
+        <span>Tambah Produk</span>
+      </a>
+      
+      <a href="page-kas-masuk.html" class="quick-btn success">
+        <i class="fas fa-arrow-down"></i>
+        <span>Kas Masuk</span>
+      </a>
+      
+      <a href="page-kas-keluar.html" class="quick-btn danger">
+        <i class="fas fa-arrow-up"></i>
+        <span>Kas Keluar</span>
+      </a>
+      
+      <a href="page-riwayat.html" class="quick-btn">
+        <i class="fas fa-history"></i>
+        <span>Riwayat</span>
+      </a>
+      
+      <button class="quick-btn" id="btnToggleShift" style="background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); color: var(--warning);">
+        <i class="fas fa-store" id="shiftIcon"></i>
+        <span id="shiftBtnText">Buka Shift</span>
+      </button>
+    </div>
+
+    <!-- Info Card -->
+    <div class="kas-card" style="margin-top: 24px;">
+      <div class="kas-title" style="margin-bottom: 16px;">
+        <i class="fas fa-info-circle" style="color: var(--info);"></i>
+        Informasi
+      </div>
+      <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+        <p style="margin-bottom: 8px;">💡 <strong>Kas Global</strong> = Modal + Pemasukan - Pengeluaran</p>
+        <p>📱 WebPOS Mobile v1.0</p>
+      </div>
+    </div>
+    
+    <!-- Spacer for bottom nav -->
+    <div style="height: 20px;"></div>
+  </main>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <i class="fas fa-home"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="page-kasir.html" class="nav-item">
+      <i class="fas fa-cash-register"></i>
+      <span>Kasir</span>
+    </a>
+    <a href="page-produk.html" class="nav-item">
+      <i class="fas fa-box"></i>
+      <span>Produk</span>
+    </a>
+    <a href="page-setting.html" class="nav-item">
+      <i class="fas fa-cog"></i>
+      <span>Setting</span>
+    </a>
+  </nav>
+
+  <!-- FLOATING ACTION BUTTON -->
+  <button class="fab" id="fabKasir" title="Buka Kasir Cepat">
+    <i class="fas fa-plus"></i>
+  </button>
+</div>
+
+<!-- MENU MODAL (Bottom Sheet) -->
+<div class="modal-overlay" id="menuModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" id="closeMenu">
+      <i class="fas fa-times"></i>
+    </button>
+    <h3 class="modal-title">Menu Lengkap</h3>
+    
+    <div class="quick-grid" style="margin-bottom: 16px;">
+      <a href="page-riwayat.html" class="quick-btn">
+        <i class="fas fa-history"></i>
+        <span>Riwayat</span>
+      </a>
+      <a href="page-hutang.html" class="quick-btn">
+        <i class="fas fa-hand-holding-usd"></i>
+        <span>Hutang</span>
+      </a>
+      <a href="page-laporan.html" class="quick-btn">
+        <i class="fas fa-chart-bar"></i>
+        <span>Laporan</span>
+      </a>
+      <a href="page-modal-harian.html" class="quick-btn">
+        <i class="fas fa-coins"></i>
+        <span>Modal</span>
+      </a>
+    </div>
+    
+    <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
+      <button class="quick-btn" id="btnLogout" style="width: 100%; color: var(--danger);">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE & SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+  // ==========================================
+  // FIREBASE CONFIG (Sesuaikan dengan milikmu)
+  // ==========================================
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "your-project.firebaseapp.com",
+    databaseURL: "https://your-project-default-rtdb.firebaseio.com",
+    projectId: "your-project",
+    storageBucket: "your-project.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abcdef123456"
+  };
+  
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const database = firebase.database();
+
+  // ==========================================
+  // UTILS
+  // ==========================================
+  const Utils = {
+    formatRupiah: (num) => {
+      return 'Rp ' + (num || 0).toLocaleString('id-ID');
+    },
+    formatNumber: (num) => {
+      return (num || 0).toLocaleString('id-ID');
+    },
+    getTodayString: () => {
+      return new Date().toISOString().split('T')[0];
+    },
+    showToast: (msg, type = 'info') => {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `toast ${type} show`;
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    },
+    confirm: (msg, callback) => {
+      if (window.confirm(msg)) callback();
+    }
+  };
+
+  // ==========================================
+  // AUTH
+  // ==========================================
+  const Auth = {
+    getCurrentUser: () => {
+      return auth.currentUser || JSON.parse(localStorage.getItem('webpos_user') || '{}');
+    },
+    logout: () => {
+      auth.signOut();
+      localStorage.removeItem('webpos_user');
+      window.location.href = 'login.html';
+    }
+  };
+
+  // ==========================================
+  // DASHBOARD LOGIC
+  // ==========================================
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check auth
+    auth.onAuthStateChanged((user) => {
+      if (!user && !localStorage.getItem('webpos_user')) {
+        window.location.href = 'login.html';
+        return;
+      }
+      initDashboard();
+    });
+  });
+
+  function initDashboard() {
+    let isShiftOpen = false;
+    
+    // Elements
+    const btnMenu = document.getElementById('btnMenu');
+    const menuModal = document.getElementById('menuModal');
+    const closeMenu = document.getElementById('closeMenu');
+    const btnTheme = document.getElementById('btnTheme');
+    const btnToggleShift = document.getElementById('btnToggleShift');
+    const fabKasir = document.getElementById('fabKasir');
+    const btnLogout = document.getElementById('btnLogout');
+
+    // Menu Modal Toggle
+    btnMenu.addEventListener('click', () => {
+      menuModal.classList.add('active');
+    });
+
+    closeMenu.addEventListener('click', () => {
+      menuModal.classList.remove('active');
+    });
+
+    menuModal.addEventListener('click', (e) => {
+      if (e.target === menuModal) menuModal.classList.remove('active');
+    });
+
+    // Theme Toggle
+    btnTheme.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      btnTheme.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+    });
+
+    // Logout
+    btnLogout.addEventListener('click', () => {
+      Utils.confirm('Logout?', () => Auth.logout());
+    });
+
+    // FAB Kasir
+    fabKasir.addEventListener('click', () => {
+      window.location.href = 'page-kasir.html';
+    });
+
+    // Load Data
+    loadDashboardData();
+    listenShiftStatus();
+
+    // Toggle Shift
+    btnToggleShift.addEventListener('click', toggleShift);
+
+    async function loadDashboardData() {
+      try {
+        const today = Utils.getTodayString();
+        const user = Auth.getCurrentUser();
+        
+        let stats = {
+          modalAwal: 0,
+          penjualan: 0,
+          kasMasuk: 0,
+          kasKeluar: 0,
+          laba: 0,
+          transaksiCount: 0
+        };
+
+        // Load transactions
+        const transSnapshot = await database.ref('transactions/' + today).once('value');
+        const transactions = transSnapshot.val() || {};
+        
+        Object.values(transactions).forEach(trans => {
+          if (trans.status !== 'cancelled' && trans.status !== 'voided') {
+            switch(trans.type) {
+              case 'penjualan':
+                stats.penjualan += trans.total || 0;
+                stats.laba += trans.profit || 0;
+                stats.transaksiCount++;
+                break;
+              case 'kas_masuk':
+                stats.kasMasuk += trans.amount || 0;
+                break;
+              case 'kas_keluar':
+                stats.kasKeluar += trans.amount || 0;
+                break;
+            }
+          }
+        });
+
+        // Load modal
+        const modalSnapshot = await database.ref('modal/' + today + '/' + user.uid).once('value');
+        const modalData = modalSnapshot.val();
+        stats.modalAwal = modalData ? modalData.amount : 0;
+
+        // Calculate
+        const kasGlobal = stats.modalAwal + stats.kasMasuk - stats.kasKeluar + stats.penjualan;
+        const kasNetto = stats.kasMasuk - stats.kasKeluar + stats.penjualan;
+
+        // Update UI
+        document.getElementById('modalAwal').textContent = Utils.formatRupiah(stats.modalAwal);
+        document.getElementById('totalTransaksi').textContent = Utils.formatNumber(stats.transaksiCount);
+        document.getElementById('totalLaba').textContent = Utils.formatRupiah(stats.laba);
+        document.getElementById('kasGlobal').textContent = Utils.formatRupiah(kasGlobal);
+        document.getElementById('kasDitangan').textContent = Utils.formatRupiah(kasGlobal);
+        document.getElementById('kasUangMasuk').textContent = '+' + Utils.formatRupiah(stats.kasMasuk);
+        document.getElementById('kasUangKeluar').textContent = '-' + Utils.formatRupiah(stats.kasKeluar);
+        document.getElementById('kasPenjualan').textContent = '+' + Utils.formatRupiah(stats.penjualan);
+        document.getElementById('kasNetto').textContent = Utils.formatRupiah(kasNetto);
+
+      } catch (error) {
+        console.error('Error:', error);
+        Utils.showToast('Gagal memuat data', 'error');
+      }
+    }
+
+    function listenShiftStatus() {
+      const today = Utils.getTodayString();
+      const user = Auth.getCurrentUser();
+      
+      database.ref('shifts/' + today + '/' + user.uid).on('value', (snapshot) => {
+        const shift = snapshot.val();
+        isShiftOpen = shift && shift.status === 'open';
+        updateShiftUI();
+      });
+    }
+
+    function updateShiftUI() {
+      const shiftStatus = document.getElementById('shiftStatus');
+      const shiftText = document.getElementById('shiftText');
+      const shiftBtnText = document.getElementById('shiftBtnText');
+      const shiftIcon = document.getElementById('shiftIcon');
+
+      if (isShiftOpen) {
+        shiftStatus.classList.add('open');
+        shiftText.textContent = 'Buka';
+        shiftBtnText.textContent = 'Tutup Shift';
+        shiftIcon.className = 'fas fa-store-slash';
+        btnToggleShift.style.color = 'var(--danger)';
+        btnToggleShift.style.background = 'rgba(239, 68, 68, 0.1)';
+        btnToggleShift.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+      } else {
+        shiftStatus.classList.remove('open');
+        shiftText.textContent = 'Tutup';
+        shiftBtnText.textContent = 'Buka Shift';
+        shiftIcon.className = 'fas fa-store';
+        btnToggleShift.style.color = 'var(--warning)';
+        btnToggleShift.style.background = 'rgba(245, 158, 11, 0.1)';
+        btnToggleShift.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+      }
+    }
+
+    async function toggleShift() {
+      if (isShiftOpen) {
+        window.location.href = 'page-kas-shift.html';
+      } else {
+        try {
+          const today = Utils.getTodayString();
+          const user = Auth.getCurrentUser();
+          
+          // Check modal
+          const modalSnapshot = await database.ref('modal/' + today + '/' + user.uid).once('value');
+          if (!modalSnapshot.val()) {
+            Utils.showToast('Set modal dulu!', 'warning');
+            window.location.href = 'page-modal-harian.html';
+            return;
+          }
+
+          await database.ref('shifts/' + today + '/' + user.uid).set({
+            status: 'open',
+            openTime: Date.now(),
+            userId: user.uid,
+            modalAwal: modalSnapshot.val().amount
+          });
+          
+          Utils.showToast('Shift dibuka!', 'success');
+        } catch (error) {
+          Utils.showToast('Gagal buka shift', 'error');
+        }
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
