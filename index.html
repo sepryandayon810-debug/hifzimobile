@@ -2,1591 +2,1701 @@
 <html lang="id" data-theme="light" data-theme-color="indigo">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#6366f1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>WebPOS Mobile</title>
+  <title>WebPOS - Dashboard</title>
 
   <link rel="manifest" href="./manifest.json">
   <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js')</script>
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- Inline CSS -->
   <style>
-    /* =========================================
-       DESIGN SYSTEM - MOBILE FIRST
-       ========================================= */
-    :root {
-      /* Primary Gradient */
-      --primary-start: #6366f1;
-      --primary-end: #8b5cf6;
-      --secondary-start: #ec4899;
-      --secondary-end: #f43f5e;
-      
-      /* Semantic Colors */
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --info: #3b82f6;
-      
-      /* Background */
-      --bg-main: #f0f4f8;
-      --bg-card: rgba(255, 255, 255, 0.85);
-      --bg-glass: rgba(255, 255, 255, 0.6);
-      
-      /* Text */
-      --text-primary: #1e293b;
-      --text-secondary: #64748b;
-      --text-muted: #94a3b8;
-      
-      /* Border */
-      --border-color: rgba(148, 163, 184, 0.2);
-      
-      /* Layout */
-      --header-height: 70px;
-      --bottom-nav-height: 75px;
-      --safe-top: env(safe-area-inset-top);
-      --safe-bottom: env(safe-area-inset-bottom);
-      
-      /* Effects */
-      --shadow-soft: 0 4px 20px rgba(99, 102, 241, 0.08);
-      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08);
-      --radius-sm: 12px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-      --radius-xl: 32px;
-    }
+/* ============================================
+   WEBPOS MOBILE FULL - GLASSMORPHISM DESIGN
+   ============================================ */
 
-    [data-theme="dark"] {
-      --bg-main: #0f172a;
-      --bg-card: rgba(30, 41, 59, 0.85);
-      --bg-glass: rgba(30, 41, 59, 0.6);
-      --text-primary: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --text-muted: #64748b;
-      --border-color: rgba(148, 163, 184, 0.1);
-    }
+:root {
+  /* Colors */
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --secondary: #ec4899;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  
+  /* Background Gradient */
+  --bg-primary: #f0f4f8;
+  --bg-secondary: rgba(241, 245, 249, 0.85);
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --bg-glass: rgba(255, 255, 255, 0.7);
+  
+  /* Text */
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  
+  /* Border & Shadow */
+  --border-color: rgba(148, 163, 184, 0.25);
+  --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 40px rgba(99, 102, 241, 0.15);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+  
+  /* Radius */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  
+  /* Layout */
+  --sidebar-width: 280px;
+  --sidebar-collapsed: 76px;
+  --header-height: 70px;
+  --bottom-nav-height: 75px;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-    }
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: rgba(30, 41, 59, 0.85);
+  --bg-card: rgba(30, 41, 59, 0.95);
+  --bg-glass: rgba(30, 41, 59, 0.7);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --border-color: rgba(148, 163, 184, 0.15);
+}
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      background: var(--bg-main);
-      color: var(--text-primary);
-      overflow: hidden;
-      position: fixed;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
-    /* =========================================
-       APP CONTAINER
-       ========================================= */
-    #app {
-      width: 100vw;
-      height: 100vh;
-      height: -webkit-fill-available;
-      display: flex;
-      flex-direction: column;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      background-attachment: fixed;
-    }
+html {
+  font-size: 16px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-    /* Background Pattern */
-    #app::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-    /* =========================================
-       HEADER - Glassmorphism
-       ========================================= */
-    .app-header {
-      flex-shrink: 0;
-      height: calc(var(--header-height) + var(--safe-top));
-      padding-top: var(--safe-top);
-      background: var(--bg-glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-left: 20px;
-      padding-right: 20px;
-      position: relative;
-      z-index: 100;
-    }
+/* Background Pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: 
+    radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-    .header-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
 
-    .header-logo {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 18px;
-      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-    }
+/* Layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
 
-    .header-title {
-      font-size: 20px;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--text-primary), var(--primary-start));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+/* ============================================
+   SIDEBAR - GLASSMORPHISM
+   ============================================ */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid var(--border-color);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transition: all .25s;
+}
 
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+.sidebar.collapsed { width: var(--sidebar-collapsed); }
+@media(max-width:1024px) {
+  .sidebar { transform: translateX(-100%); box-shadow: var(--shadow-lg); }
+  .sidebar.mobile-open { transform: translateX(0); }
+}
 
-    .icon-btn {
-      width: 42px;
-      height: 42px;
-      border: none;
-      background: var(--bg-card);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-secondary);
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: var(--shadow-soft);
-      transition: all 0.2s;
-      border: 1px solid var(--border-color);
-    }
+.sidebar-header {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: var(--header-height);
+  background: var(--bg-card);
+}
 
-    .icon-btn:active {
-      transform: scale(0.92);
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
-    }
+.logo-container { display: flex; align-items: center; gap: .5rem; }
 
-    .icon-btn.primary {
-      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
-      color: white;
-      border: none;
-    }
+.logo-icon {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: bold; font-size: 1.25rem;
+  box-shadow: var(--shadow-glow);
+}
 
-    .shift-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      background: rgba(239, 68, 68, 0.15);
-      color: var(--danger);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-    }
+.logo-text {
+  font-size: 1.35rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
 
-    .shift-pill.open {
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--success);
-      border-color: rgba(16, 185, 129, 0.2);
-    }
+.sidebar.collapsed .logo-text { opacity: 0; width: 0; }
 
-    .shift-pill::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-      box-shadow: 0 0 8px currentColor;
-    }
+.menu-toggle {
+  position: absolute; right: -14px; top: 24px;
+  width: 28px; height: 28px; background: var(--primary);
+  border: none; border-radius: 50%; color: white;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1001; font-size: .75rem; cursor: pointer;
+  box-shadow: var(--shadow-md);
+}
 
-    /* =========================================
-       MAIN CONTENT - Scrollable
-       ========================================= */
-    .app-content {
-      flex: 1;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      padding: 20px;
-      padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 20px);
-      position: relative;
-      z-index: 1;
-    }
+.menu-toggle:hover { background: var(--primary-dark); }
+.sidebar.collapsed .menu-toggle { transform: rotate(180deg); }
 
-    /* =========================================
-       STATS GRID - 4 KOTAK (2x2)
-       ========================================= */
-    .stats-container {
+.sidebar-search { padding: 1rem; border-bottom: 1px solid var(--border-color); }
+.search-input-wrapper { position: relative; display: flex; align-items: center; }
+.search-input-wrapper i { position: absolute; left: 1rem; color: var(--text-muted); font-size: .875rem; }
+.search-input {
+  width: 100%; padding: .75rem 1rem .75rem 2.5rem;
+  border: 1px solid var(--border-color); border-radius: var(--radius-md);
+  background: var(--bg-secondary); color: var(--text-primary); font-size: .875rem;
+  transition: all 0.2s;
+}
+.search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 1rem; }
+.nav-section { margin-bottom: 1.5rem; }
+.nav-section-title { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); padding: .5rem 1rem; margin-bottom: .25rem; }
+.sidebar.collapsed .nav-section-title { display: none; }
+
+.nav-menu { list-style: none; }
+.nav-item { margin-bottom: 4px; }
+.nav-link {
+  display: flex; align-items: center; gap: 1rem;
+  padding: .75rem 1rem; border-radius: var(--radius-md);
+  color: var(--text-secondary); text-decoration: none; font-size: .9rem; font-weight: 500;
+  transition: all .2s; position: relative; overflow: hidden;
+}
+.nav-link::before {
+  content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--primary), var(--secondary)); opacity: 0.1;
+  transition: width 0.2s; border-radius: var(--radius-md);
+}
+.nav-link:hover::before, .nav-link.active::before { width: 100%; }
+.nav-link:hover { color: var(--primary); transform: translateX(4px); }
+.nav-link.active { color: var(--primary); font-weight: 600; background: rgba(99, 102, 241, 0.1); }
+.nav-link i { width: 22px; text-align: center; font-size: 1.1rem; }
+.nav-link span { white-space: nowrap; position: relative; z-index: 1; }
+.sidebar.collapsed .nav-link span { display: none; }
+
+.nav-dropdown { position: relative; }
+.nav-dropdown-toggle { justify-content: space-between; cursor: pointer; }
+.nav-dropdown-toggle .dropdown-arrow { transition: transform .2s; font-size: .75rem; margin-left: auto; }
+.nav-dropdown.open .nav-dropdown-toggle .dropdown-arrow { transform: rotate(180deg); }
+.nav-submenu { list-style: none; padding-left: 2.75rem; max-height: 0; overflow: hidden; transition: max-height .25s; }
+.sidebar.collapsed .nav-submenu { display: none; }
+.nav-dropdown.open .nav-submenu { max-height: 500px; margin-top: 4px; }
+.nav-submenu .nav-link { padding: .5rem 1rem; font-size: .85rem; opacity: 0.9; }
+
+.sidebar-footer { padding: 1rem; border-top: 1px solid var(--border-color); background: var(--bg-card); }
+.user-profile { display: flex; align-items: center; gap: 1rem; cursor: pointer; padding: 0.5rem; border-radius: var(--radius-md); transition: all 0.2s; }
+.user-profile:hover { background: var(--bg-secondary); }
+.user-avatar {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 600; font-size: .875rem; box-shadow: var(--shadow-sm);
+}
+.user-info { flex: 1; overflow: hidden; }
+.sidebar.collapsed .user-info { display: none; }
+.user-name { font-weight: 600; font-size: .9rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: .75rem; color: var(--text-muted); text-transform: capitalize; }
+
+/* ============================================
+   MAIN CONTENT & HEADER
+   ============================================ */
+.main-content {
+  flex: 1; margin-left: var(--sidebar-width); min-height: 100vh;
+  display: flex; flex-direction: column; transition: margin-left .25s;
+}
+.sidebar.collapsed~.main-content { margin-left: var(--sidebar-collapsed); }
+@media(max-width:1024px) { .main-content { margin-left: 0; } .sidebar.collapsed~.main-content { margin-left: 0; } }
+
+.main-header {
+  height: calc(var(--header-height) + var(--safe-top)); padding-top: var(--safe-top);
+  background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+  display: flex; align-items: center; justify-content: space-between;
+  padding-left: 1.5rem; padding-right: 1.5rem;
+  position: sticky; top: 0; z-index: 100;
+}
+
+.header-left { display: flex; align-items: center; gap: 1rem; }
+.header-title {
+  font-size: 1.5rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--text-primary), var(--primary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.header-stats { display: flex; align-items: center; gap: 2rem; }
+@media(max-width:768px) { .header-stats { display: none; } }
+.header-stats .stat-item { display: flex; flex-direction: column; align-items: flex-start; }
+.header-stats .stat-label { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); }
+.header-stats .stat-value { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+
+.status-indicator {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .5rem 1rem; border-radius: 9999px; font-size: .75rem; font-weight: 700;
+  background: var(--bg-secondary); border: 1px solid var(--border-color);
+}
+.status-indicator .status-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 8px currentColor; }
+.status-indicator.open { background: rgba(16, 185, 129, 0.15); color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
+.status-indicator.open .status-dot { background: var(--success); }
+.status-indicator.closed { background: rgba(239, 68, 68, 0.15); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
+.status-indicator.closed .status-dot { background: var(--danger); }
+
+.header-actions { display: flex; align-items: center; gap: .75rem; }
+.btn-icon {
+  width: 40px; height: 40px; padding: 0; border-radius: var(--radius-md);
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all .2s; font-size: 1rem; box-shadow: var(--shadow-sm);
+}
+.btn-icon:hover { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-glow); }
+
+.page-content { flex: 1; padding: 1.5rem; overflow-y: auto; padding-bottom: calc(var(--bottom-nav-height) + 2rem); }
+@media(max-width:768px) { .page-content { padding: 1rem; padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 1.5rem); } }
+
+/* ============================================
+   STATS GRID - 4 KOTAK (2x2) MOBILE
+   ============================================ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem; margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem; margin-bottom: 1rem;
+  }
+}
+
+.stat-card {
+  background: var(--bg-card); backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg); border: 1px solid var(--border-color);
+  padding: 1.25rem; display: flex; align-items: center; gap: 1rem;
+  transition: all .3s; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+}
+
+/* Garis warna di atas tiap kotak */
+.stat-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary)); opacity: 0.8;
+}
+.stat-card:nth-child(1)::before { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+.stat-card:nth-child(2)::before { background: linear-gradient(90deg, #10b981, #34d399); }
+.stat-card:nth-child(3)::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.stat-card:nth-child(4)::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+
+.stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+@media (max-width: 768px) {
+  .stat-card { padding: 1rem; flex-direction: column; text-align: center; gap: 0.75rem; }
+}
+
+.stat-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem; color: white; flex-shrink: 0; box-shadow: var(--shadow-md);
+}
+
+.stat-icon.purple { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.stat-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+.stat-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.stat-icon.pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+@media (max-width: 768px) {
+  .stat-icon { width: 44px; height: 44px; font-size: 1.1rem; }
+  .stat-value { font-size: 1.1rem !important; }
+  .stat-label { font-size: 0.65rem !important; }
+}
+
+.stat-content { flex: 1; }
+.stat-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.25rem; }
+.stat-value { font-size: 1.35rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.5px; }
+.stat-value.success { color: var(--success); }
+.stat-value.danger { color: var(--danger); }
+.stat-value.warning { color: var(--warning); }
+
+/* ============================================
+   KAS CALCULATION - MODERN
+   ============================================ */
+.kas-calculation {
+  background: var(--bg-card); backdrop-filter: blur(10px);
+  border-radius: var(--radius-xl); border: 1px solid var(--border-color);
+  padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+  .kas-calculation { padding: 1.25rem; border-radius: var(--radius-lg); }
+}
+
+.kas-calculation-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);
+}
+.kas-calculation-title { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
+@media (max-width: 768px) { .kas-calculation-title { font-size: 1rem; } }
+
+.kas-calculation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+@media (max-width: 768px) { .kas-calculation-grid { grid-template-columns: 1fr; gap: 0.75rem; } }
+
+.kas-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem; background: var(--bg-secondary);
+  border-radius: var(--radius-md); border: 1px solid var(--border-color);
+  transition: all 0.2s;
+}
+@media (max-width: 768px) { .kas-item { padding: 0.875rem 1rem; } }
+
+.kas-item:hover { transform: translateX(4px); border-color: var(--primary); }
+.kas-item-info { display: flex; align-items: center; gap: 0.75rem; }
+.kas-item-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center; font-size: 0.875rem;
+}
+.kas-item-icon.income { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+.kas-item-icon.expense { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+.kas-item-icon.neutral { background: rgba(99, 102, 241, 0.15); color: var(--primary); }
+.kas-item-icon.warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+
+.kas-item-label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+.kas-item-value { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+.kas-item-value.income { color: var(--success); }
+.kas-item-value.expense { color: var(--danger); }
+
+.kas-total {
+  margin-top: 1.5rem; padding-top: 1.5rem;
+  border-top: 2px dashed var(--border-color);
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(236,72,153,0.05));
+  padding: 1.25rem; border-radius: var(--radius-md);
+}
+.kas-total-label { font-size: 1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
+.kas-total-value { font-size: 1.5rem; font-weight: 800; color: var(--primary); text-shadow: 0 2px 4px rgba(99, 102, 241, 0.2); }
+
+.formula-display {
+  margin-top: 1rem; padding: 1rem;
+  background: rgba(99, 102, 241, 0.08);
+  border-radius: var(--radius-md); font-size: 0.8rem;
+  color: var(--text-secondary); text-align: center;
+  font-family: 'Courier New', monospace; border: 1px dashed var(--border-color);
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+.card {
+  background: var(--bg-card); backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg); border: 1px solid var(--border-color);
+  overflow: hidden; transition: all .3s; box-shadow: var(--shadow-md);
+}
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.card-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: .5rem; }
+.card-body { padding: 1.5rem; }
+.card-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-secondary); }
+
+@media (max-width: 768px) {
+  .card { border-radius: var(--radius-md); }
+  .card-header { padding: 1rem; }
+  .card-body { padding: 1rem; }
+  .card-title { font-size: 1rem; }
+}
+
+/* ============================================
+   QUICK ACTIONS - MODERN GRID
+   ============================================ */
+.quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+@media (max-width: 768px) { .quick-actions { gap: 0.5rem; } }
+
+.quick-action-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.5rem; padding: 1.25rem; background: var(--bg-secondary);
+  border: 1px solid var(--border-color); border-radius: var(--radius-lg);
+  color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 600;
+  transition: all .3s; cursor: pointer; position: relative; overflow: hidden;
+}
+@media (max-width: 768px) { .quick-action-btn { padding: 1rem 0.5rem; font-size: 0.8rem; } }
+
+.quick-action-btn::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  opacity: 0; transition: opacity 0.3s; z-index: 0;
+}
+.quick-action-btn:hover { color: white; border-color: transparent; transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.quick-action-btn:hover::before { opacity: 1; }
+.quick-action-btn i, .quick-action-btn span { position: relative; z-index: 1; transition: all 0.3s; }
+.quick-action-btn i { font-size: 1.5rem; margin-bottom: 0.25rem; }
+@media (max-width: 768px) { .quick-action-btn i { font-size: 1.25rem; } }
+.quick-action-btn:hover i { transform: scale(1.1); }
+
+/* Special buttons */
+.quick-action-btn[href*="kas-masuk"] { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: var(--success); }
+.quick-action-btn[href*="kas-masuk"]:hover { background: var(--success); color: white; }
+.quick-action-btn[href*="kas-keluar"] { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: var(--danger); }
+.quick-action-btn[href*="kas-keluar"]:hover { background: var(--danger); color: white; }
+
+/* ============================================
+   CONTENT GRID
+   ============================================ */
+.content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+@media (max-width: 1024px) { .content-grid { grid-template-columns: 1fr; gap: 1rem; } }
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge {
+  display: inline-flex; align-items: center; gap: .25rem;
+  padding: .4rem .875rem; border-radius: 9999px; font-size: .75rem; font-weight: 700; border: 1px solid transparent;
+}
+.badge-primary { background: rgba(99, 102, 241, 0.15); color: var(--primary); border-color: rgba(99, 102, 241, 0.3); }
+.badge-success { background: rgba(16, 185, 129, 0.15); color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  padding: .75rem 1.5rem; border-radius: var(--radius-md); font-size: .875rem; font-weight: 600;
+  cursor: pointer; transition: all .2s; border: none; outline: none; white-space: nowrap; position: relative; overflow: hidden;
+}
+.btn::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: translateX(-100%); transition: transform 0.5s;
+}
+.btn:hover::before { transform: translateX(100%); }
+.btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5); }
+
+/* ============================================
+   MOBILE NAVIGATION - GLASS FLOATING
+   ============================================ */
+.mobile-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  height: calc(var(--bottom-nav-height) + var(--safe-bottom)); padding-bottom: var(--safe-bottom);
+  background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-color); z-index: 999;
+  padding-left: 1rem; padding-right: 1rem;
+}
+
+.mobile-nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .25rem; color: var(--text-muted); text-decoration: none; font-size: .7rem; font-weight: 600;
+  transition: all .2s; padding: .5rem; border-radius: var(--radius-md); position: relative;
+}
+.mobile-nav-item i { font-size: 1.35rem; transition: all 0.2s; }
+.mobile-nav-item.active { color: var(--primary); background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1)); }
+.mobile-nav-item.active i { transform: translateY(-2px); }
+.mobile-nav-item:active { opacity: 0.7; }
+
+@media(max-width:768px) {
+  .mobile-nav { display: flex; padding-left: 0.5rem; padding-right: 0.5rem; }
+  .page-content { padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 1.5rem); }
+}
+
+/* ============================================
+   TOAST & LOADING
+   ============================================ */
+.toast-container {
+  position: fixed; top: calc(var(--header-height) + var(--safe-top) + 1rem); right: 1rem;
+  z-index: 9999; display: flex; flex-direction: column; gap: .5rem;
+  max-width: 400px; width: 90%;
+}
+.toast {
+  display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem;
+  background: var(--bg-card); backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+  border-left: 4px solid; border: 1px solid var(--border-color);
+  animation: slideIn .3s ease;
+}
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--danger); }
+
+.loading-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg-primary); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; z-index: 9998;
+  opacity: 0; visibility: hidden; transition: all .25s;
+  backdrop-filter: blur(10px);
+}
+.loading-overlay.active { opacity: 1; visibility: visible; }
+.spinner {
+  width: 48px; height: 48px; border: 4px solid rgba(99, 102, 241, 0.1);
+  border-top-color: var(--primary); border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================
+   UTILITIES & FIXES
+   ============================================ */
+.d-none { display: none !important; }
+.text-primary { color: var(--primary) !important; }
+.text-success { color: var(--success) !important; }
+.text-danger { color: var(--danger) !important; }
+.font-bold { font-weight: 700 !important; }
+.w-full { width: 100% !important; }
+
+/* Desktop Sidebar Fix */
+@media (min-width: 1025px) {
+  .sidebar { transform: translateX(0) !important; width: var(--sidebar-width) !important; }
+  .sidebar .logo-text { opacity: 1 !important; width: auto !important; }
+  .sidebar .nav-link span { display: block !important; }
+  .main-content { margin-left: var(--sidebar-width) !important; }
+}
+
+/* iPhone Notch Support */
+@supports (padding-top: env(safe-area-inset-top)) {
+  @media (max-width: 1024px) {
+    .main-header { padding-top: env(safe-area-inset-top); height: calc(var(--header-height) + env(safe-area-inset-top)); }
+  }
+}
+  </style>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  
+  
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  
+  <!-- Styles -->
+  
+  
+  <style>
+    /* Dashboard Specific Styles */
+    .stats-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
-    .stat-box {
+    .stat-card {
       background: var(--bg-card);
-      backdrop-filter: blur(10px);
-      border-radius: var(--radius-lg);
-      padding: 20px 16px;
+      border-radius: var(--radius-xl);
       border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-card);
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.2s;
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all var(--transition-base);
     }
 
-    .stat-box:active {
-      transform: scale(0.98);
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
     }
 
-    /* Decorative gradient line top */
-    .stat-box::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
-      opacity: 0.8;
-    }
-
-    .stat-box.success::before { background: linear-gradient(90deg, #10b981, #34d399); }
-    .stat-box.warning::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-    .stat-box.danger::before { background: linear-gradient(90deg, #ef4444, #f87171); }
-    .stat-box.info::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-
-    .stat-icon-wrapper {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-md);
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      margin-bottom: 12px;
-      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
-      color: var(--primary-start);
+      font-size: 1.25rem;
+      color: white;
+      flex-shrink: 0;
     }
 
-    .stat-box.success .stat-icon-wrapper { 
-      background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(52,211,153,0.1));
-      color: var(--success);
-    }
-    .stat-box.warning .stat-icon-wrapper { 
-      background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(251,191,36,0.1));
-      color: var(--warning);
-    }
-    .stat-box.danger .stat-icon-wrapper { 
-      background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(248,113,113,0.1));
-      color: var(--danger);
+    .stat-icon.purple { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .stat-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+    .stat-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .stat-icon.pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+    .stat-icon.blue { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+    .stat-icon.red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .stat-icon.teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+    .stat-icon.indigo { background: linear-gradient(135deg, #4f46e5, #6366f1); }
+
+    .stat-content { flex: 1; }
+
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
     }
 
     .stat-value {
-      font-size: 22px;
-      font-weight: 800;
+      font-size: 1.25rem;
+      font-weight: 700;
       color: var(--text-primary);
-      margin-bottom: 4px;
-      letter-spacing: -0.5px;
     }
 
-    .stat-label {
-      font-size: 12px;
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
+    .stat-value.success { color: var(--success); }
+    .stat-value.danger { color: var(--danger); }
+    .stat-value.warning { color: var(--warning); }
 
-    /* =========================================
-       KAS CARD - Large Featured
-       ========================================= */
-    .kas-featured {
-      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+    /* Kas Calculation Section */
+    .kas-calculation {
+      background: var(--bg-card);
       border-radius: var(--radius-xl);
-      padding: 28px 24px;
-      color: white;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
-      position: relative;
-      overflow: hidden;
+      border: 1px solid var(--border-color);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
     }
 
-    .kas-featured::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -20%;
-      width: 200px;
-      height: 200px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 50%;
-      filter: blur(40px);
-    }
-
-    .kas-header-row {
+    .kas-calculation-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 1;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .kas-title {
-      font-size: 14px;
-      opacity: 0.9;
-      font-weight: 600;
-    }
-
-    .kas-badge {
-      background: rgba(255,255,255,0.2);
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 10px;
+    .kas-calculation-title {
+      font-size: 1.1rem;
       font-weight: 700;
-      backdrop-filter: blur(10px);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .kas-amount-large {
-      font-size: 36px;
-      font-weight: 800;
-      margin-bottom: 24px;
-      position: relative;
-      z-index: 1;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .kas-breakdown-row {
+    .kas-calculation-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      position: relative;
-      z-index: 1;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
     }
 
-    .kas-mini-item {
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(10px);
-      padding: 12px;
+    .kas-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+    }
+
+    .kas-item-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .kas-item-icon {
+      width: 36px;
+      height: 36px;
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .kas-mini-icon {
-      width: 32px;
-      height: 32px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 0.875rem;
     }
 
-    .kas-mini-info {
-      flex: 1;
+    .kas-item-icon.income { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .kas-item-icon.expense { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    .kas-item-icon.neutral { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
+    .kas-item-icon.warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+
+    .kas-item-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
     }
 
-    .kas-mini-label {
-      font-size: 10px;
-      opacity: 0.8;
-      margin-bottom: 2px;
-    }
-
-    .kas-mini-value {
-      font-size: 14px;
+    .kas-item-value {
+      font-size: 1rem;
       font-weight: 700;
+      color: var(--text-primary);
     }
 
-    /* =========================================
-       SECTION HEADERS
-       ========================================= */
-    .section-header {
+    .kas-item-value.income { color: var(--success); }
+    .kas-item-value.expense { color: var(--danger); }
+
+    /* Total Section */
+    .kas-total {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
-      margin-top: 24px;
     }
 
-    .section-title {
-      font-size: 18px;
+    .kas-total-label {
+      font-size: 1rem;
       font-weight: 700;
       color: var(--text-primary);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 0.5rem;
     }
 
-    .section-action {
-      font-size: 13px;
-      color: var(--primary-start);
-      font-weight: 600;
-      text-decoration: none;
+    .kas-total-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
     }
 
-    /* =========================================
-       QUICK ACTIONS - Modern Grid
-       ========================================= */
-    .quick-actions-grid {
+    /* Quick Actions */
+    .quick-actions {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      gap: 0.75rem;
     }
 
-    .action-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      text-decoration: none;
-      color: var(--text-primary);
+    .quick-action-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      box-shadow: var(--shadow-soft);
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .action-card:active {
-      transform: translateY(2px);
-      box-shadow: none;
-    }
-
-    .action-card::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .action-card:active::after {
-      opacity: 1;
-    }
-
-    .action-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
       justify-content: center;
-      font-size: 22px;
-      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
-      color: var(--primary-start);
-    }
-
-    .action-card.success .action-icon {
-      background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(52,211,153,0.1));
-      color: var(--success);
-    }
-    .action-card.danger .action-icon {
-      background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(248,113,113,0.1));
-      color: var(--danger);
-    }
-    .action-card.warning .action-icon {
-      background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(251,191,36,0.1));
-      color: var(--warning);
-    }
-
-    .action-label {
-      font-size: 13px;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    /* =========================================
-       INFO CARDS
-       ========================================= */
-    .info-card {
-      background: var(--bg-card);
+      gap: 0.5rem;
+      padding: 1.25rem;
+      background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 20px;
-      margin-top: 20px;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .info-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .info-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .info-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 12px;
-      background: var(--bg-main);
-      border-radius: var(--radius-md);
-    }
-
-    .info-icon-small {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-
-    .info-icon-small.success { background: rgba(16,185,129,0.1); color: var(--success); }
-    .info-icon-small.danger { background: rgba(239,68,68,0.1); color: var(--danger); }
-    .info-icon-small.warning { background: rgba(245,158,11,0.1); color: var(--warning); }
-
-    .info-text-small {
-      flex: 1;
-    }
-
-    .info-label-small {
-      font-size: 12px;
       color: var(--text-secondary);
-      margin-bottom: 2px;
-    }
-
-    .info-desc-small {
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    /* =========================================
-       BOTTOM NAVIGATION - Floating Style
-       ========================================= */
-    .bottom-nav {
-      flex-shrink: 0;
-      height: calc(var(--bottom-nav-height) + var(--safe-bottom));
-      padding-bottom: var(--safe-bottom);
-      background: var(--bg-glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding-left: 10px;
-      padding-right: 10px;
-      position: relative;
-      z-index: 100;
-    }
-
-    .nav-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      height: 100%;
       text-decoration: none;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 600;
-      transition: all 0.2s;
-      border-radius: 16px;
-      padding: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
     }
 
-    .nav-item i {
-      font-size: 22px;
-      margin-bottom: 2px;
-      transition: transform 0.2s;
-    }
-
-    .nav-item.active {
-      color: var(--primary-start);
-      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
-    }
-
-    .nav-item.active i {
+    .quick-action-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
       transform: translateY(-2px);
     }
 
-    .nav-item:active {
-      opacity: 0.7;
+    .quick-action-btn i { font-size: 1.5rem; }
+
+    /* Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
     }
 
-    /* Center FAB in bottom nav */
-    .nav-fab {
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 24px;
-      margin-top: -30px;
-      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
-      border: 4px solid var(--bg-main);
-      text-decoration: none;
-      transition: transform 0.2s;
+    @media (max-width: 1024px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .kas-calculation-grid { grid-template-columns: 1fr; }
     }
 
-    .nav-fab:active {
-      transform: scale(0.9);
-    }
-
-    /* =========================================
-       MENU MODAL - Full Screen Drawer
-       ========================================= */
-    .menu-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s;
-    }
-
-    .menu-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .menu-drawer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 85%;
-      max-width: 320px;
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      z-index: 1001;
-      transform: translateX(-100%);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-    }
-
-    .menu-overlay.active .menu-drawer {
-      transform: translateX(0);
-    }
-
-    .menu-header {
-      padding: 24px;
-      background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
-      color: white;
-      position: relative;
-    }
-
-    .menu-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 32px;
-      height: 32px;
-      background: rgba(255,255,255,0.2);
-      border: none;
-      border-radius: 50%;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .menu-user {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 8px;
-    }
-
-    .menu-avatar {
-      width: 50px;
-      height: 50px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      border: 2px solid rgba(255,255,255,0.3);
-    }
-
-    .menu-user-info h3 {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .menu-user-info p {
-      font-size: 13px;
-      opacity: 0.9;
-    }
-
-    .menu-nav {
-      flex: 1;
-      padding: 16px;
-    }
-
-    .menu-section {
-      margin-bottom: 24px;
-    }
-
-    .menu-section-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-      padding-left: 12px;
-    }
-
-    .menu-link {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 12px;
-      border-radius: 12px;
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      transition: all 0.15s;
-    }
-
-    .menu-link:hover, .menu-link.active {
-      background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
-      color: var(--primary-start);
-    }
-
-    .menu-link i {
-      width: 24px;
-      text-align: center;
-      font-size: 18px;
-    }
-
-    .menu-footer {
-      padding: 16px;
-      border-top: 1px solid var(--border-color);
-    }
-
-    .menu-logout {
-      width: 100%;
-      padding: 14px;
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--danger);
-      border: none;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-
-    /* =========================================
-       TOAST NOTIFICATIONS
-       ========================================= */
-    .toast-container {
-      position: fixed;
-      top: calc(var(--header-height) + var(--safe-top) + 10px);
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3000;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      width: 90%;
-      max-width: 400px;
-      pointer-events: none;
-    }
-
-    .toast {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
+    /* Formula Display */
+    .formula-display {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(99, 102, 241, 0.05);
       border-radius: var(--radius-lg);
-      padding: 16px 20px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      border-left: 4px solid;
-      transform: translateY(-100px);
-      opacity: 0;
-      transition: all 0.3s;
-      pointer-events: auto;
-    }
-
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .toast.success { border-left-color: var(--success); }
-    .toast.error { border-left-color: var(--danger); }
-    .toast.warning { border-left-color: var(--warning); }
-
-    .toast-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-
-    .toast.success .toast-icon { background: rgba(16,185,129,0.1); color: var(--success); }
-    .toast.error .toast-icon { background: rgba(239,68,68,0.1); color: var(--danger); }
-    .toast.warning .toast-icon { background: rgba(245,158,11,0.1); color: var(--warning); }
-
-    /* Loading */
-    .loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--bg-main);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 5000;
-      transition: opacity 0.3s;
-    }
-
-    .loading-screen.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .spinner-modern {
-      width: 50px;
-      height: 50px;
-      border: 4px solid rgba(99, 102, 241, 0.1);
-      border-top-color: var(--primary-start);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Safe area untuk iPhone */
-    @supports (padding-top: env(safe-area-inset-top)) {
-      .app-header {
-        padding-top: env(safe-area-inset-top);
-        height: calc(70px + env(safe-area-inset-top));
-      }
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      font-family: monospace;
     }
   </style>
-<base target="_blank">
 </head>
 <body>
-
-<div id="app">
-  <!-- HEADER -->
-  <header class="app-header">
-    <div class="header-brand">
-      <button class="icon-btn" id="btnMenu" style="margin-left: -8px;">
-        <i class="fas fa-bars"></i>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <div class="logo-icon">
+            <i class="fas fa-cash-register"></i>
+          </div>
+          <span class="logo-text">WebPOS</span>
+        </div>
+      </div>
+      
+      <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-chevron-left"></i>
       </button>
-      <div class="header-logo">
-        <i class="fas fa-cash-register"></i>
-      </div>
-      <h1 class="header-title">WebPOS</h1>
-    </div>
-    
-    <div class="header-actions">
-      <span class="shift-pill" id="shiftStatusBadge">
-        <span id="shiftTextBadge">Tutup</span>
-      </span>
-      <button class="icon-btn primary" id="btnQuickKasir" title="Buka Kasir">
-        <i class="fas fa-plus"></i>
-      </button>
-    </div>
-  </header>
-
-  <!-- MAIN CONTENT -->
-  <main class="app-content">
-    <!-- 4 KOTAK STATISTIK (GRID 2x2) -->
-    <div class="stats-container">
-      <div class="stat-box info">
-        <div class="stat-icon-wrapper">
-          <i class="fas fa-coins"></i>
+      
+      <div class="sidebar-search">
+        <div class="search-input-wrapper">
+          <i class="fas fa-search"></i>
+          <input type="text" class="search-input" id="menuSearch" placeholder="Cari menu...">
         </div>
-        <div class="stat-value" id="modalAwal">Rp 0</div>
-        <div class="stat-label">Modal Awal</div>
       </div>
       
-      <div class="stat-box warning">
-        <div class="stat-icon-wrapper">
-          <i class="fas fa-receipt"></i>
+            <nav class="sidebar-nav">
+        <!-- Utama -->
+        <div class="nav-section">
+          <div class="nav-section-title">Utama</div>
+          <ul class="nav-menu">
+            <li class="nav-item">
+              <a href="index.html" class="nav-link active" data-menu="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="page-kasir.html" class="nav-link" data-menu="kasir">
+                <i class="fas fa-cash-register"></i>
+                <span>Kasir</span>
+              </a>
+            </li>
+            <li class="nav-item">
+  <a href="page-produk.html" class="nav-link" data-menu="produk">
+    <i class="fas fa-box"></i>
+    <span>Produk</span>
+  </a>
+</li>
         </div>
-        <div class="stat-value" id="totalTransaksi">0</div>
-        <div class="stat-label">Transaksi</div>
-      </div>
-      
-      <div class="stat-box success">
-        <div class="stat-icon-wrapper">
-          <i class="fas fa-chart-line"></i>
-        </div>
-        <div class="stat-value" id="totalLaba">Rp 0</div>
-        <div class="stat-label">Total Laba</div>
-      </div>
-      
-      <div class="stat-box danger">
-        <div class="stat-icon-wrapper">
-          <i class="fas fa-wallet"></i>
-        </div>
-        <div class="stat-value" id="kasGlobal">Rp 0</div>
-        <div class="stat-label">Kas Global</div>
-      </div>
-    </div>
 
-    <!-- KAS FEATURED CARD -->
-    <div class="kas-featured">
-      <div class="kas-header-row">
-        <span class="kas-title">Kas di Tangan</span>
-        <span class="kas-badge" id="kasDate">Hari Ini</span>
-      </div>
-      <div class="kas-amount-large" id="kasDitangan">Rp 0</div>
-      
-      <div class="kas-breakdown-row">
-        <div class="kas-mini-item">
-          <div class="kas-mini-icon">
-            <i class="fas fa-arrow-down"></i>
-          </div>
-          <div class="kas-mini-info">
-            <div class="kas-mini-label">Masuk</div>
-            <div class="kas-mini-value" id="kasMasukMini">+Rp 0</div>
-          </div>
+        <!-- Transaksi -->
+        <div class="nav-section">
+          <div class="nav-section-title">Transaksi</div>
+          <ul class="nav-menu">
+            <li class="nav-item">
+              <a href="page-riwayat.html" class="nav-link" data-menu="riwayat">
+                <i class="fas fa-history"></i>
+                <span>Riwayat Transaksi</span>
+              </a>
+            </li>
+            <li class="nav-item nav-dropdown" data-dropdown>
+              <div class="nav-link nav-dropdown-toggle" data-menu="kas">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <i class="fas fa-wallet"></i>
+                  <span>Kas Management</span>
+                </div>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
+              </div>
+              <ul class="nav-submenu">
+                <li><a href="page-kas.html" class="nav-link"><span>Ringkasan Kas</span></a></li>
+                <li><a href="page-modal-harian.html" class="nav-link"><span>Modal Harian</span></a></li>
+                <li><a href="page-kas-masuk.html" class="nav-link"><span>Kas Masuk</span></a></li>
+                <li><a href="page-kas-keluar.html" class="nav-link"><span>Kas Keluar</span></a></li>
+                <li><a href="page-kas-shift.html" class="nav-link"><span>Kas & Shift</span></a></li>
+                <li><a href="page-kas-topup.html" class="nav-link"><span>Top Up</span></a></li>
+                <li><a href="page-kas-tarik.html" class="nav-link"><span>Tarik Tunai</span></a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+  <a href="page-pembelian.html" class="nav-link" data-menu="pembelian">
+    <i class="fas fa-shopping-cart"></i>
+    <span>Pembelian / Restock</span>
+  </a>
+</li>
+            <li class="nav-item">
+              <a href="page-hutang.html" class="nav-link" data-menu="hutang">
+                <i class="fas fa-hand-holding-usd"></i>
+                <span>Hutang & Piutang</span>
+              </a>
+            </li>
+          </ul>
         </div>
-        
-        <div class="kas-mini-item">
-          <div class="kas-mini-icon">
-            <i class="fas fa-arrow-up"></i>
-          </div>
-          <div class="kas-mini-info">
-            <div class="kas-mini-label">Keluar</div>
-            <div class="kas-mini-value" id="kasKeluarMini">-Rp 0</div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- QUICK ACTIONS -->
-    <div class="section-header">
-      <div class="section-title">
-        <i class="fas fa-bolt" style="color: var(--warning);"></i>
-        Aksi Cepat
-      </div>
-    </div>
-    
-    <div class="quick-actions-grid">
-      <a href="page-kasir.html" class="action-card">
-        <div class="action-icon">
-          <i class="fas fa-cash-register"></i>
-        </div>
-        <span class="action-label">Buka Kasir</span>
-      </a>
-      
-      <a href="page-produk.html" class="action-card success">
-        <div class="action-icon">
-          <i class="fas fa-box"></i>
-        </div>
-        <span class="action-label">Produk</span>
-      </a>
-      
-      <a href="page-kas-masuk.html" class="action-card success">
-        <div class="action-icon">
-          <i class="fas fa-arrow-down"></i>
-        </div>
-        <span class="action-label">Kas Masuk</span>
-      </a>
-      
-      <a href="page-kas-keluar.html" class="action-card danger">
-        <div class="action-icon">
-          <i class="fas fa-arrow-up"></i>
-        </div>
-        <span class="action-label">Kas Keluar</span>
-      </a>
-      
-      <a href="page-riwayat.html" class="action-card">
-        <div class="action-icon">
-          <i class="fas fa-history"></i>
-        </div>
-        <span class="action-label">Riwayat</span>
-      </a>
-      
-      <button class="action-card warning" id="btnToggleShift" style="border: none; background: var(--bg-card); width: 100%; cursor: pointer;">
-        <div class="action-icon">
-          <i class="fas fa-store" id="shiftIconAction"></i>
-        </div>
-        <span class="action-label" id="shiftActionText">Buka Shift</span>
-      </button>
-    </div>
-
-    <!-- INFO CARD -->
-    <div class="info-card">
-      <div class="info-title">
-        <i class="fas fa-info-circle" style="color: var(--info);"></i>
-        Informasi Kas
-      </div>
-      <div class="info-list">
-        <div class="info-item">
-          <div class="info-icon-small success">
-            <i class="fas fa-arrow-down"></i>
-          </div>
-          <div class="info-text-small">
-            <div class="info-label-small">Uang Masuk</div>
-            <div class="info-desc-small">Pemasukan diluar penjualan & modal</div>
-          </div>
-        </div>
-        <div class="info-item">
-          <div class="info-icon-small danger">
-            <i class="fas fa-arrow-up"></i>
-          </div>
-          <div class="info-text-small">
-            <div class="info-label-small">Uang Keluar</div>
-            <div class="info-desc-small">Pengeluaran operasional dari kas</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SPACER -->
-    <div style="height: 20px;"></div>
-  </main>
-
-  <!-- BOTTOM NAVIGATION -->
-  <nav class="bottom-nav">
-    <a href="index.html" class="nav-item active">
-      <i class="fas fa-home"></i>
-      <span>Beranda</span>
-    </a>
-    <a href="page-kasir.html" class="nav-item">
-      <i class="fas fa-cash-register"></i>
-      <span>Kasir</span>
-    </a>
-    <a href="page-kasir.html" class="nav-fab">
-      <i class="fas fa-plus"></i>
-    </a>
-    <a href="page-produk.html" class="nav-item">
-      <i class="fas fa-box"></i>
-      <span>Produk</span>
-    </a>
-    <a href="page-setting.html" class="nav-item">
-      <i class="fas fa-cog"></i>
-      <span>Setting</span>
-    </a>
-  </nav>
-</div>
-
-<!-- MENU DRAWER MODAL -->
-<div class="menu-overlay" id="menuOverlay">
-  <div class="menu-drawer">
-    <div class="menu-header">
-      <button class="menu-close" id="closeMenu">
-        <i class="fas fa-times"></i>
-      </button>
-      <div class="menu-user">
-        <div class="menu-avatar">
-          <i class="fas fa-user"></i>
-        </div>
-        <div class="menu-user-info">
-          <h3 id="menuUserName">Loading...</h3>
-          <p id="menuUserRole">Administrator</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="menu-nav">
-      <!-- Utama -->
-      <div class="menu-section">
-        <div class="menu-section-title">Utama</div>
-        <a href="index.html" class="menu-link active">
-          <i class="fas fa-home"></i>
-          <span>Dashboard</span>
-        </a>
-        <a href="page-kasir.html" class="menu-link">
-          <i class="fas fa-cash-register"></i>
-          <span>Kasir</span>
-        </a>
-        <a href="page-produk.html" class="menu-link">
-          <i class="fas fa-box"></i>
-          <span>Produk</span>
-        </a>
-      </div>
-
-      <!-- Transaksi -->
-      <div class="menu-section">
-        <div class="menu-section-title">Transaksi</div>
-        <a href="page-riwayat.html" class="menu-link">
-          <i class="fas fa-history"></i>
-          <span>Riwayat Transaksi</span>
-        </a>
-        <a href="page-kas.html" class="menu-link">
-          <i class="fas fa-wallet"></i>
-          <span>Ringkasan Kas</span>
-        </a>
-        <a href="page-modal-harian.html" class="menu-link">
-          <i class="fas fa-coins"></i>
-          <span>Modal Harian</span>
-        </a>
-        <a href="page-kas-masuk.html" class="menu-link">
-          <i class="fas fa-arrow-down"></i>
-          <span>Kas Masuk</span>
-        </a>
-        <a href="page-kas-keluar.html" class="menu-link">
-          <i class="fas fa-arrow-up"></i>
-          <span>Kas Keluar</span>
-        </a>
-        <a href="page-kas-shift.html" class="menu-link">
-          <i class="fas fa-clock"></i>
-          <span>Kas & Shift</span>
-        </a>
-        <a href="page-kas-topup.html" class="menu-link">
-          <i class="fas fa-plus-circle"></i>
-          <span>Top Up</span>
-        </a>
-        <a href="page-kas-tarik.html" class="menu-link">
-          <i class="fas fa-minus-circle"></i>
-          <span>Tarik Tunai</span>
-        </a>
-        <a href="page-pembelian.html" class="menu-link">
-          <i class="fas fa-shopping-cart"></i>
-          <span>Pembelian / Restock</span>
-        </a>
-        <a href="page-hutang.html" class="menu-link">
-          <i class="fas fa-hand-holding-usd"></i>
-          <span>Hutang & Piutang</span>
-        </a>
-      </div>
-
-      <!-- Laporan -->
-      <div class="menu-section">
-        <div class="menu-section-title">Laporan</div>
-        <a href="page-laporan.html" class="menu-link">
+        <!-- Laporan -->
+        <div class="nav-section">
+    <div class="nav-section-title">Laporan</div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="page-laporan.html" class="nav-link" data-menu="laporan">
           <i class="fas fa-chart-bar"></i>
           <span>Laporan Penjualan</span>
         </a>
-        <a href="page-laporan-stok.html" class="menu-link">
+      </li>
+      <li class="nav-item">
+        <a href="page-laporan-stok.html" class="nav-link" data-menu="laporan-stok">
           <i class="fas fa-boxes"></i>
           <span>Laporan Stok</span>
         </a>
-        <a href="page-laporan-terlaris.html" class="menu-link">
+      </li>
+      <!-- BARANG TERLARIS - Menu Standalone (BUKAN SUBMENU) -->
+      <li class="nav-item">
+        <a href="page-laporan-terlaris.html" class="nav-link" data-menu="laporan-terlaris">
           <i class="fas fa-crown"></i>
           <span>Barang Terlaris</span>
         </a>
-      </div>
+      </li>
+    </ul>
+  </div>
 
-      <!-- Integrasi -->
-      <div class="menu-section">
-        <div class="menu-section-title">Integrasi</div>
-        <a href="page-saldo-telegram.html" class="menu-link">
-          <i class="fab fa-telegram"></i>
-          <span>Saldo Telegram</span>
-        </a>
-        <a href="page-data-pelanggan.html" class="menu-link">
-          <i class="fas fa-users"></i>
-          <span>Data Pelanggan</span>
-        </a>
-      </div>
+        <!-- Integrasi -->
+        <div class="nav-section">
+          <div class="nav-section-title">Integrasi</div>
+          <ul class="nav-menu">
+            <li class="nav-item">
+              <a href="page-saldo-telegram.html" class="nav-link" data-menu="telegram">
+                <i class="fab fa-telegram"></i>
+                <span>Saldo Telegram</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="page-data-pelanggan.html" class="nav-link" data-menu="pelanggan">
+                <i class="fas fa-users"></i>
+                <span>Data Pelanggan</span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-      <!-- Sistem -->
-      <div class="menu-section">
-        <div class="menu-section-title">Sistem</div>
-        <a href="page-pengguna.html" class="menu-link">
-          <i class="fas fa-user-cog"></i>
-          <span>Pengguna</span>
-        </a>
-        <a href="page-setting.html" class="menu-link">
-          <i class="fas fa-cog"></i>
-          <span>Pengaturan</span>
-        </a>
-        <a href="page-backup.html" class="menu-link">
-          <i class="fas fa-cloud-upload-alt"></i>
-          <span>Backup & Sync</span>
-        </a>
-        <a href="page-log-aktivitas.html" class="menu-link">
+        <!-- Sistem -->
+        <div class="nav-section">
+          <div class="nav-section-title">Sistem</div>
+          <ul class="nav-menu">
+            <li class="nav-item">
+              <a href="page-pengguna.html" class="nav-link" data-menu="pengguna">
+                <i class="fas fa-user-cog"></i>
+                <span>Pengguna</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="page-setting.html" class="nav-link" data-menu="setting">
+                <i class="fas fa-cog"></i>
+                <span>Pengaturan</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="page-backup.html" class="nav-link" data-menu="backup">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Backup & Sync</span>
+              </a>
+            </li>
+             <li class="nav-item">
+        <a href="page-log-aktivitas.html" class="nav-link" data-menu="log-aktivitas">
           <i class="fas fa-history"></i>
           <span>Log Aktivitas</span>
         </a>
-        <a href="page-printer.html" class="menu-link">
-          <i class="fas fa-print"></i>
-          <span>Printer & Struk</span>
-        </a>
-        <a href="page-reset.html" class="menu-link">
-          <i class="fas fa-trash-alt"></i>
-          <span>Reset Data</span>
-        </a>
+      </li>
+            <li class="nav-item">
+              <a href="page-printer.html" class="nav-link" data-menu="printer">
+                <i class="fas fa-print"></i>
+                <span>Printer & Struk</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="page-reset.html" class="nav-link" data-menu="reset">
+                <i class="fas fa-trash-alt"></i>
+                <span>Reset Data</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-profile" id="userProfile">
+          <div class="user-avatar" id="userAvatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="user-info">
+            <div class="user-name" id="userName">Loading...</div>
+            <div class="user-role" id="userRole">-</div>
+          </div>
+        </div>
       </div>
-    </div>
-    
-    <div class="menu-footer">
-      <button class="menu-logout" id="btnMenuLogout">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>Logout</span>
-      </button>
-    </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="main-header">
+        <div class="header-left">
+          <button class="btn-icon" id="mobileMenuToggle" style="display:flex;">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="header-title">Dashboard</h1>
+        </div>
+        
+        <div class="header-stats" id="headerStats">
+          <div class="stat-item">
+            <span class="stat-label">Kas di Tangan</span>
+            <span class="stat-value" id="kasDitangan">Rp 0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Total Penjualan</span>
+            <span class="stat-value positive" id="totalPenjualan">Rp 0</span>
+          </div>
+        </div>
+        
+        <div class="header-actions">
+          <div class="status-indicator closed" id="shiftStatus">
+            <span class="status-dot"></span>
+            <span id="shiftText">Tutup</span>
+          </div>
+          <button class="btn-icon" id="btnTheme" title="Toggle Dark Mode">
+            <i class="fas fa-moon"></i>
+          </button>
+          <button class="btn-icon" id="btnLogout" title="Logout">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fas fa-coins"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Modal Awal</div>
+              <div class="stat-value" id="modalAwal">Rp 0</div>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fas fa-receipt"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Total Transaksi</div>
+              <div class="stat-value" id="totalTransaksi">0</div>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Shift</div>
+              <div class="stat-value" id="shiftInfo">-</div>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon pink">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Total Laba</div>
+              <div class="stat-value success" id="totalLaba">Rp 0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kas Calculation Section -->
+        <div class="kas-calculation">
+          <div class="kas-calculation-header">
+            <h3 class="kas-calculation-title">
+              <i class="fas fa-calculator"></i>
+              Perhitungan Kas
+            </h3>
+            <span class="badge badge-primary" id="kasDate">Hari Ini</span>
+          </div>
+          
+          <div class="kas-calculation-grid">
+            <!-- Modal Awal -->
+            <div class="kas-item">
+              <div class="kas-item-info">
+                <div class="kas-item-icon neutral">
+                  <i class="fas fa-wallet"></i>
+                </div>
+                <span class="kas-item-label">Modal Awal</span>
+              </div>
+              <span class="kas-item-value" id="kasModalAwal">Rp 0</span>
+            </div>
+            
+            <!-- Uang Masuk -->
+            <div class="kas-item">
+              <div class="kas-item-info">
+                <div class="kas-item-icon income">
+                  <i class="fas fa-arrow-down"></i>
+                </div>
+                <span class="kas-item-label">Uang Masuk</span>
+              </div>
+              <span class="kas-item-value income" id="kasUangMasuk">+ Rp 0</span>
+            </div>
+            
+            <!-- Uang Keluar -->
+            <div class="kas-item">
+              <div class="kas-item-info">
+                <div class="kas-item-icon expense">
+                  <i class="fas fa-arrow-up"></i>
+                </div>
+                <span class="kas-item-label">Uang Keluar</span>
+              </div>
+              <span class="kas-item-value expense" id="kasUangKeluar">- Rp 0</span>
+            </div>
+            
+            <!-- Penjualan Produk -->
+            <div class="kas-item">
+              <div class="kas-item-info">
+                <div class="kas-item-icon income">
+                  <i class="fas fa-shopping-cart"></i>
+                </div>
+                <span class="kas-item-label">Penjualan Produk</span>
+              </div>
+              <span class="kas-item-value income" id="kasPenjualan">+ Rp 0</span>
+            </div>
+            
+            <!-- Top Up -->
+            <div class="kas-item">
+              <div class="kas-item-info">
+                <div class="kas-item-icon income">
+                  <i class="fas fa-plus-circle"></i>
+                </div>
+                <span class="kas-item-label">Top Up</span>
+              </div>
+              <span class="kas-item-value income" id="kasTopUp">+ Rp 0</span>
+            </div>
+            
+            <!-- Tarik Tunai -->
+            <div class="kas-item">
+              <div class="kas-item-info">
+                <div class="kas-item-icon expense">
+                  <i class="fas fa-minus-circle"></i>
+                </div>
+                <span class="kas-item-label">Tarik Tunai</span>
+              </div>
+              <span class="kas-item-value expense" id="kasTarik">- Rp 0</span>
+            </div>
+          </div>
+          
+          <!-- Total Uang Global -->
+          <div class="kas-total">
+            <div class="kas-total-label">
+              <i class="fas fa-money-bill-wave"></i>
+              Uang Global (Kas di Tangan)
+            </div>
+            <div class="kas-total-value" id="kasGlobal">Rp 0</div>
+          </div>
+          
+          <div class="formula-display">
+            Modal Awal + Uang Masuk - Uang Keluar + Penjualan + Top Up - Tarik Tunai
+          </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+          <!-- Left Column - Quick Actions -->
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-bolt" style="color: var(--primary);"></i>
+                  Aksi Cepat
+                </h3>
+              </div>
+              <div class="card-body">
+               <div class="quick-actions">
+  <!-- Baris 1 -->
+  <a href="page-kasir.html" class="quick-action-btn">
+    <i class="fas fa-cash-register"></i>
+    <span>Buka Kasir</span>
+  </a>
+  <a href="page-produk.html" class="quick-action-btn">
+    <i class="fas fa-plus"></i>
+    <span>Tambah Produk</span>
+  </a>
+  <a href="page-modal.html" class="quick-action-btn">
+    <i class="fas fa-coins"></i>
+    <span>Set Modal</span>
+  </a>
+  
+  <!-- Baris 2 - Tambahan Kas Masuk & Keluar -->
+  <a href="page-kas-masuk.html" class="quick-action-btn" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: var(--success);">
+    <i class="fas fa-arrow-down" style="color: var(--success);"></i>
+    <span>Kas Masuk</span>
+  </a>
+  
+  <a href="page-kas-keluar.html" class="quick-action-btn" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: var(--danger);">
+    <i class="fas fa-arrow-up" style="color: var(--danger);"></i>
+    <span>Kas Keluar</span>
+  </a>
+  
+  <button class="quick-action-btn" id="btnToggleShift">
+    <i class="fas fa-store-slash"></i>
+    <span id="shiftBtnText">Tutup Shift</span>
+  </button>
+</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column - Info -->
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-info-circle" style="color: var(--info);"></i>
+                  Informasi
+                </h3>
+              </div>
+              <div class="card-body">
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                  <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <i class="fas fa-arrow-down" style="color: var(--success);"></i>
+                    <div>
+                      <div style="font-size: 0.75rem; color: var(--text-muted);">Uang Masuk</div>
+                      <div style="font-size: 0.8rem;">Uang yang tidak berasal dari modal</div>
+                    </div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <i class="fas fa-arrow-up" style="color: var(--danger);"></i>
+                    <div>
+                      <div style="font-size: 0.75rem; color: var(--text-muted);">Uang Keluar</div>
+                      <div style="font-size: 0.8rem;">Uang yang berasal dari Kas ditangan (laci)</div>
+                    </div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                    <i class="fas fa-percentage" style="color: var(--warning);"></i>
+                    <div>
+                      <div style="font-size: 0.75rem; color: var(--text-muted);">Admin Fee</div>
+                      <div style="font-size: 0.8rem;">Masuk ke laba (dari Top Up)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+      <a href="index.html" class="mobile-nav-item active">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="page-kasir.html" class="mobile-nav-item">
+        <i class="fas fa-cash-register"></i>
+        <span>Kasir</span>
+      </a>
+      <a href="page-produk.html" class="mobile-nav-item">
+        <i class="fas fa-box"></i>
+        <span>Produk</span>
+      </a>
+      <a href="page-riwayat.html" class="mobile-nav-item">
+        <i class="fas fa-history"></i>
+        <span>Riwayat</span>
+      </a>
+      <a href="page-setting.html" class="mobile-nav-item">
+        <i class="fas fa-cog"></i>
+        <span>Setting</span>
+      </a>
+    </nav>
   </div>
-</div>
 
-<!-- TOAST CONTAINER -->
-<div class="toast-container" id="toastContainer"></div>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <p style="margin-top: 1rem; color: var(--text-secondary);">Loading...</p>
+  </div>
 
-<!-- LOADING SCREEN -->
-<div class="loading-screen" id="loadingScreen">
-  <div class="spinner-modern"></div>
-  <p style="margin-top: 16px; color: var(--text-secondary); font-weight: 600;">Loading...</p>
-</div>
+  <!-- Scripts -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar-filter.js"></script>
 
-<!-- FIREBASE & SCRIPTS -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-
-<script>
-  // ==========================================
-  // FIREBASE CONFIG - SAMAKAN DENGAN FILE ASLI
-  // ==========================================
-  const firebaseConfig = {
-    // GANTI DENGAN CONFIG ASLI ANDA
-    apiKey: "YOUR_API_KEY",
-    authDomain: "your-project.firebaseapp.com",
-    databaseURL: "https://your-project-default-rtdb.firebaseio.com",
-    projectId: "your-project",
-    storageBucket: "your-project.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:abcdef123456"
-  };
-  
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  
-  const auth = firebase.auth();
-  const database = firebase.database();
-
-  // ==========================================
-  // UTILS (Simplified dari file asli)
-  // ==========================================
-  const Utils = {
-    formatRupiah: (num) => {
-      return 'Rp ' + (num || 0).toLocaleString('id-ID');
-    },
-    formatNumber: (num) => {
-      return (num || 0).toLocaleString('id-ID');
-    },
-    getTodayString: () => {
-      return new Date().toISOString().split('T')[0];
-    },
-    getStorage: (key) => {
-      try {
-        return localStorage.getItem(key);
-      } catch (e) {
-        return null;
-      }
-    },
-    setStorage: (key, val) => {
-      try {
-        localStorage.setItem(key, val);
-      } catch (e) {}
-    },
-    showToast: (msg, type = 'info') => {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.innerHTML = `
-        <div class="toast-icon"><i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation' : 'info'}"></i></div>
-        <span>${msg}</span>
-      `;
-      container.appendChild(toast);
-      
-      setTimeout(() => toast.classList.add('show'), 10);
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-  };
-
-  // ==========================================
-  // AUTH (Simplified)
-  // ==========================================
-  const Auth = {
-    getCurrentUser: () => {
-      return auth.currentUser || JSON.parse(localStorage.getItem('webpos_user') || '{}');
-    },
-    logout: () => {
-      auth.signOut();
-      localStorage.removeItem('webpos_user');
-      localStorage.removeItem('webpos_session');
-      window.location.href = 'login.html';
-    }
-  };
-
-  // ==========================================
-  // MAIN APP
-  // ==========================================
-  document.addEventListener('DOMContentLoaded', () => {
-    // Auth check
-    auth.onAuthStateChanged((user) => {
-      if (!user && !Utils.getStorage('webpos_session')) {
-        window.location.href = 'login.html';
-        return;
-      }
-      
-      if (user) {
-        // Update user info
-        document.getElementById('menuUserName').textContent = user.displayName || user.email || 'User';
-        document.getElementById('menuUserRole').textContent = 'Administrator';
-      }
-      
-      initApp();
-    });
-  });
-
-  function initApp() {
-    let isShiftOpen = false;
-    
-    // DOM Elements
-    const btnMenu = document.getElementById('btnMenu');
-    const menuOverlay = document.getElementById('menuOverlay');
-    const closeMenu = document.getElementById('closeMenu');
-    const btnQuickKasir = document.getElementById('btnQuickKasir');
-    const btnToggleShift = document.getElementById('btnToggleShift');
-    const btnMenuLogout = document.getElementById('btnMenuLogout');
-    const loadingScreen = document.getElementById('loadingScreen');
-
-    // Hide loading
-    setTimeout(() => loadingScreen.classList.add('hidden'), 500);
-
-    // Menu Toggle
-    btnMenu.addEventListener('click', () => {
-      menuOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
-
-    closeMenu.addEventListener('click', closeMenuFunc);
-    menuOverlay.addEventListener('click', (e) => {
-      if (e.target === menuOverlay) closeMenuFunc();
-    });
-
-    function closeMenuFunc() {
-      menuOverlay.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    // Quick Kasir
-    btnQuickKasir.addEventListener('click', () => {
-      window.location.href = 'page-kasir.html';
-    });
-
-    // Logout
-    btnMenuLogout.addEventListener('click', () => {
-      if (confirm('Yakin ingin logout?')) {
-        Auth.logout();
-      }
-    });
-
-    // Load Dashboard Data
-    loadDashboardData();
-    listenShiftStatus();
-
-    async function loadDashboardData() {
-      try {
-        const today = Utils.getTodayString();
-        const user = Auth.getCurrentUser();
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Wait for Firebase auth to be ready
+      auth.onAuthStateChanged((user) => {
+        if (!user && !Utils.getStorage('webpos_session')) {
+          window.location.href = 'login.html';
+          return;
+        }
         
-        let stats = {
-          modalAwal: 0,
-          penjualan: 0,
-          kasMasuk: 0,
-          kasKeluar: 0,
-          laba: 0,
-          transaksiCount: 0
-        };
-
-        // Load transactions
-        const transSnapshot = await database.ref('transactions/' + today).once('value');
-        const transactions = transSnapshot.val() || {};
+        // Load user data if available
+        if (user) {
+          Auth.loadUserData(user.uid);
+        }
         
-        Object.values(transactions).forEach(trans => {
-          if (trans.status !== 'cancelled' && trans.status !== 'voided') {
-            switch(trans.type) {
-              case 'penjualan':
-                stats.penjualan += trans.total || 0;
-                stats.laba += trans.profit || 0;
-                stats.transaksiCount++;
-                break;
-              case 'kas_masuk':
-                stats.kasMasuk += trans.amount || 0;
-                break;
-              case 'kas_keluar':
-                stats.kasKeluar += trans.amount || 0;
-                break;
-              case 'topup':
-                stats.kasMasuk += trans.amount || 0;
-                stats.laba += trans.adminFee || 0;
-                stats.transaksiCount++;
-                break;
-              case 'tarik':
-                stats.kasKeluar += trans.amount || 0;
-                stats.laba += trans.adminFee || 0;
-                break;
-            }
-          }
-        });
-
-        // Load modal
-        const modalSnapshot = await database.ref('modal/' + today + '/' + user.uid).once('value');
-        const modalData = modalSnapshot.val();
-        stats.modalAwal = modalData ? modalData.amount : 0;
-
-        // Calculate
-        const kasGlobal = stats.modalAwal + stats.kasMasuk - stats.kasKeluar + stats.penjualan;
-        const kasNetto = stats.kasMasuk - stats.kasKeluar + stats.penjualan;
-
-        // Update UI
-        document.getElementById('modalAwal').textContent = Utils.formatRupiah(stats.modalAwal);
-        document.getElementById('totalTransaksi').textContent = Utils.formatNumber(stats.transaksiCount);
-        document.getElementById('totalLaba').textContent = Utils.formatRupiah(stats.laba);
-        document.getElementById('kasGlobal').textContent = Utils.formatRupiah(kasGlobal);
-        document.getElementById('kasDitangan').textContent = Utils.formatRupiah(kasGlobal);
-        document.getElementById('kasMasukMini').textContent = '+' + Utils.formatRupiah(stats.kasMasuk);
-        document.getElementById('kasKeluarMini').textContent = '-' + Utils.formatRupiah(stats.kasKeluar);
-
-      } catch (error) {
-        console.error('Error:', error);
-        Utils.showToast('Gagal memuat data', 'error');
-      }
-    }
-
-    function listenShiftStatus() {
-      const today = Utils.getTodayString();
-      const user = Auth.getCurrentUser();
-      
-      if (!user) return;
-      
-      database.ref('shifts/' + today + '/' + user.uid).on('value', (snapshot) => {
-        const shift = snapshot.val();
-        isShiftOpen = shift && shift.status === 'open';
-        updateShiftUI();
+        // Initialize dashboard
+        initDashboard();
       });
-    }
 
-    function updateShiftUI() {
-      const shiftStatusBadge = document.getElementById('shiftStatusBadge');
-      const shiftTextBadge = document.getElementById('shiftTextBadge');
-      const shiftIconAction = document.getElementById('shiftIconAction');
-      const shiftActionText = document.getElementById('shiftActionText');
+      function initDashboard() {
+      // State
+      let isShiftOpen = false;
+      let todayStats = {
+        modalAwal: 0,
+        penjualan: 0,
+        topup: 0,
+        tarik: 0,
+        kasMasuk: 0,
+        kasKeluar: 0,
+        topupAdminFee: 0,
+        tarikAdminFee: 0,
+        laba: 0,
+        transaksiCount: 0
+      };
 
-      if (isShiftOpen) {
-        shiftStatusBadge.classList.add('open');
-        shiftTextBadge.textContent = 'Buka';
-        shiftActionText.textContent = 'Tutup Shift';
-        shiftIconAction.className = 'fas fa-store-slash';
-      } else {
-        shiftStatusBadge.classList.remove('open');
-        shiftTextBadge.textContent = 'Tutup';
-        shiftActionText.textContent = 'Buka Shift';
-        shiftIconAction.className = 'fas fa-store';
+      // DOM Elements
+      const sidebar = document.getElementById('sidebar');
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+      const btnTheme = document.getElementById('btnTheme');
+      const btnLogout = document.getElementById('btnLogout');
+      const btnToggleShift = document.getElementById('btnToggleShift');
+
+      // Load user data
+      function loadUserData() {
+        const user = Auth.getCurrentUser();
+        if (user) {
+          document.getElementById('userName').textContent = user.name || user.email;
+          document.getElementById('userRole').textContent = 
+            user.role.charAt(0).toUpperCase() + user.role.slice(1);
+          
+          const avatar = document.getElementById('userAvatar');
+          if (avatar && user.name) {
+            const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            avatar.textContent = initials;
+          }
+        }
       }
-    }
 
-    btnToggleShift.addEventListener('click', async () => {
-      if (isShiftOpen) {
-        window.location.href = 'page-kas-shift.html';
-      } else {
+      
+      // Toggle sidebar
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        const icon = menuToggle.querySelector('i');
+        icon.style.transform = sidebar.classList.contains('collapsed') ? 'rotate(180deg)' : 'rotate(0deg)';
+      });
+
+      // Mobile menu toggle
+      mobileMenuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('mobile-open');
+      });
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 1024) {
+          if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            sidebar.classList.remove('mobile-open');
+          }
+        }
+      });
+
+      // Dropdown menus
+      document.querySelectorAll('[data-dropdown]').forEach(dropdown => {
+        const toggle = dropdown.querySelector('.nav-dropdown-toggle');
+        if (toggle) {
+          toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            dropdown.classList.toggle('open');
+          });
+        }
+      });
+
+      // Theme toggle
+      btnTheme.addEventListener('click', () => {
+        const isDark = Utils.Theme.toggleDarkMode();
+        btnTheme.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      });
+
+      // Initialize theme button state
+      if (Utils.Theme.isDarkMode()) {
+        btnTheme.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+
+      // Logout
+      btnLogout.addEventListener('click', () => {
+        Utils.confirm('Apakah Anda yakin ingin logout?', () => {
+          Auth.logout();
+        });
+      });
+
+      // Load dashboard data
+      async function loadDashboardData() {
+        Utils.showLoading();
+        
         try {
           const today = Utils.getTodayString();
           const user = Auth.getCurrentUser();
           
-          // Check modal
-          const modalSnapshot = await database.ref('modal/' + today + '/' + user.uid).once('value');
-          if (!modalSnapshot.val()) {
-            Utils.showToast('Set modal dulu!', 'warning');
-            window.location.href = 'page-modal-harian.html';
-            return;
-          }
-
-          await database.ref('shifts/' + today + '/' + user.uid).set({
-            status: 'open',
-            openTime: Date.now(),
-            userId: user.uid,
-            modalAwal: modalSnapshot.val().amount
-          });
+          // Load transactions
+          const transSnapshot = await database.ref('transactions/' + today).once('value');
+          const transactions = transSnapshot.val() || {};
           
-          Utils.showToast('Shift dibuka!', 'success');
+          // Calculate stats
+          Object.values(transactions).forEach(trans => {
+  if (trans.status !== 'cancelled' && trans.status !== 'voided') {
+    switch (trans.type) {
+      case 'penjualan':
+        todayStats.penjualan += trans.total || 0;
+        todayStats.laba += trans.profit || 0;
+        todayStats.transaksiCount++; // ✅ Transaksi bisnis dihitung
+        break;
+        
+      case 'topup':
+        todayStats.topup += trans.amount || 0;
+        todayStats.laba += trans.adminFee || 0;
+        todayStats.transaksiCount++; // ✅ Transaksi bisnis dihitung
+        break;
+        
+      case 'tarik':
+        todayStats.tarik += trans.amount || 0;
+        todayStats.laba += trans.adminFee || 0;
+        todayStats.transaksiCount++; // ✅ Transaksi bisnis dihitung
+        break;
+        
+      case 'kas_masuk':
+        todayStats.kasMasuk += trans.amount || 0;
+        // ❌ Jangan todayStats.transaksiCount++
+        // Ini termasuk Kas Masuk biasa + Hutang (yang dicentang)
+        break;
+        
+      case 'kas_keluar':
+        todayStats.kasKeluar += trans.amount || 0;
+         break;
+      
+      case 'hutang':
+      case 'piutang':
+        // Tidak menambah transaksiCount, hanya log untuk debug
+        console.log('Transaksi hutang/piutang ditemukan (tidak dihitung):', trans);
+        break;
+    }
+  }
+});
+          // Load modal
+          const modalSnapshot = await database.ref('modal/' + today + '/' + user.uid).once('value');
+          const modalData = modalSnapshot.val();
+          todayStats.modalAwal = modalData ? modalData.amount : 0;
+
+          // Calculate Uang Global
+          // Formula: Modal Awal + Uang Masuk - Uang Keluar + Penjualan + Top Up - Tarik Tunai
+          // Note: Top Up include admin fee, Tarik exclude admin fee (admin masuk ke laba)
+          const uangGlobal = todayStats.modalAwal + 
+                            todayStats.kasMasuk - 
+                            todayStats.kasKeluar + 
+                            todayStats.penjualan + 
+                            todayStats.topup +
+                            todayStats.topupAdminFee -
+                            todayStats.tarik;
+
+          // Update UI - Header Stats
+          document.getElementById('kasDitangan').textContent = Utils.formatRupiah(uangGlobal);
+          document.getElementById('totalPenjualan').textContent = Utils.formatRupiah(todayStats.penjualan);
+          
+          // Update UI - Stats Cards
+          document.getElementById('modalAwal').textContent = Utils.formatRupiah(todayStats.modalAwal);
+          document.getElementById('totalTransaksi').textContent = Utils.formatNumber(todayStats.transaksiCount);
+          document.getElementById('totalLaba').textContent = Utils.formatRupiah(todayStats.laba);
+
+          // Update UI - Kas Calculation
+          document.getElementById('kasModalAwal').textContent = Utils.formatRupiah(todayStats.modalAwal);
+          document.getElementById('kasUangMasuk').textContent = '+ ' + Utils.formatRupiah(todayStats.kasMasuk);
+          document.getElementById('kasUangKeluar').textContent = '- ' + Utils.formatRupiah(todayStats.kasKeluar);
+          document.getElementById('kasPenjualan').textContent = '+ ' + Utils.formatRupiah(todayStats.penjualan);
+          document.getElementById('kasTopUp').textContent = '+ ' + Utils.formatRupiah(todayStats.topup);
+          document.getElementById('kasTarik').textContent = '- ' + Utils.formatRupiah(todayStats.tarik);
+          document.getElementById('kasGlobal').textContent = Utils.formatRupiah(uangGlobal);
+
+          // Check shift status
+        
+
         } catch (error) {
-          Utils.showToast('Gagal buka shift', 'error');
+          console.error('Error loading dashboard data:', error);
+          Utils.showToast('Gagal memuat data dashboard', 'error');
+        }
+        
+        Utils.hideLoading();
+      }
+
+      // Check shift status
+     function listenShiftStatus() {
+        const today = Utils.getTodayString();
+        const user = Auth.getCurrentUser();
+
+       console.log('Attaching shift listener for:', today, user.uid);
+        
+        database.ref('shifts/' + today + '/' + user.uid).on('value', (snapshot) => {
+          const shift = snapshot.val();
+          console.log('Shift data received:', shift);
+          isShiftOpen = shift && shift.status === 'open';
+          updateShiftUI(); // ⭐ PINDAHKAN KE SINI
+        }, (error) => {
+          console.error('Shift listener error:', error);
+        });
+      }
+        
+            // Update shift UI
+      function updateShiftUI() {
+        const shiftStatus = document.getElementById('shiftStatus');
+        const shiftText = document.getElementById('shiftText');
+        const shiftInfo = document.getElementById('shiftInfo');
+        const shiftBtnText = document.getElementById('shiftBtnText');
+        const btnIcon = btnToggleShift.querySelector('i');
+        
+        if (isShiftOpen) {
+          shiftStatus.classList.remove('closed');
+          shiftStatus.classList.add('open');
+          shiftText.textContent = 'Buka';
+          shiftInfo.textContent = 'Shift Aktif';
+          shiftBtnText.textContent = 'Tutup Shift';
+          btnIcon.className = 'fas fa-store-slash';
+        } else {
+          shiftStatus.classList.remove('open');
+          shiftStatus.classList.add('closed');
+          shiftText.textContent = 'Tutup';
+          shiftInfo.textContent = '-';
+          shiftBtnText.textContent = 'Buka Shift';
+          btnIcon.className = 'fas fa-store';
         }
       }
-    });
-  }
-</script>
 
+              // Toggle shift
+      async function toggleShift() {
+        const today = Utils.getTodayString();
+        const user = Auth.getCurrentUser();
+        
+        if (isShiftOpen) {
+          // Jika buka, arahkan ke halaman Kas Shift untuk tutup lengkap
+          window.location.href = 'page-kas-shift.html';
+        } else {
+          // Buka shift
+          Utils.showLoading();
+          
+          try {
+            // Cek modal dulu
+            const modalSnapshot = await database.ref('modal/' + today + '/' + user.uid).once('value');
+            const modalData = modalSnapshot.val();
+            
+            if (!modalData || !modalData.amount) {
+              Utils.hideLoading();
+              Utils.showToast('Silakan set modal awal terlebih dahulu', 'warning');
+              window.location.href = 'page-modal-harian.html';
+              return;
+            }
+            
+            // Cek apakah sudah ada shift terbuka
+            const shiftSnapshot = await database.ref('shifts/' + today + '/' + user.uid).once('value');
+            if (shiftSnapshot.val() && shiftSnapshot.val().status === 'open') {
+              Utils.hideLoading();
+              Utils.showToast('Shift sudah terbuka', 'info');
+              return;
+            }
+            
+            const shiftId = 'shift_' + Date.now();
+            
+            await database.ref('shifts/' + today + '/' + user.uid).set({
+              id: shiftId,
+              status: 'open',
+              openTime: Date.now(),
+              openedAt: firebase.database.ServerValue.TIMESTAMP,
+              userId: user.uid,
+              userName: user.name || user.email,
+              modalAwal: modalData.amount
+            });
+            
+            Utils.showToast('Shift berhasil dibuka', 'success');
+            
+          } catch (error) {
+            console.error('Error opening shift:', error);
+            Utils.showToast('Gagal membuka shift', 'error');
+          } finally {
+            Utils.hideLoading();
+          }
+        }
+      }
+
+      // Event listener untuk tombol toggle shift
+      btnToggleShift.addEventListener('click', toggleShift);
+        
+      // Prevent links from opening in new tab - ULTRA FIX
+      function fixLinks() {
+        document.querySelectorAll('a').forEach(link => {
+          // Remove target attribute completely
+          link.removeAttribute('target');
+          link.removeAttribute('rel');
+          
+          // Override ALL click behaviors
+          link.onclick = function(e) {
+            // Remove target just in case it was added dynamically
+            this.removeAttribute('target');
+            this.removeAttribute('rel');
+            
+            // Navigate in same tab
+            const href = this.getAttribute('href');
+            if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+              window.location.href = href;
+              return false; // Prevent default
+            }
+          };
+        });
+      }
+      
+      // Run multiple times to catch dynamically added links
+      fixLinks();
+      setTimeout(fixLinks, 100);
+      setTimeout(fixLinks, 500);
+      setTimeout(fixLinks, 1000);
+      
+      // Also use MutationObserver to catch new links
+      const observer = new MutationObserver(function(mutations) {
+        fixLinks();
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+
+            // Initialize
+      loadUserData();
+      loadDashboardData();
+      listenShiftStatus();  // ✅ Hanya 1 kali di sini
+      
+            // Re-check shift status saat halaman kembali visible (hanya 1 kali di sini)
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          console.log('Page visible, re-checking shift status...');
+          const today = Utils.getTodayString();
+          const user = Auth.getCurrentUser();
+          database.ref('shifts/' + today + '/' + user.uid).once('value').then((snapshot) => {
+            const shift = snapshot.val();
+            isShiftOpen = shift && shift.status === 'open';
+            console.log('Shift status checked:', isShiftOpen, shift);
+            updateShiftUI();
+          });
+        }
+      });
+    }  
+   });   
+  </script>
 </body>
 </html>
