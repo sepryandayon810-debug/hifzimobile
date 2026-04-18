@@ -2333,6 +2333,118 @@ body::before {
     }
   }
 }
+
+/* ============================================
+   CSS PATCH - PERBAIKAN SPESIFIK
+   Tambahkan di akhir file CSS
+   ============================================ */
+
+/* 1. FIX: Ruang kosong di atas - Kurangi header height */
+.main-header {
+  height: var(--header-height) !important;
+  padding-top: 0 !important;
+  min-height: var(--header-height) !important;
+}
+
+/* 2. FIX: Tombol minimize cart (panah bawah) muncul di mobile */
+@media(max-width:1024px) {
+  .cart-minimize {
+    display: flex !important;
+    width: 32px;
+    height: 32px;
+    background: var(--bg-secondary);
+    border: none;
+    border-radius: 50%;
+    color: var(--text-secondary);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 0.5rem;
+  }
+  
+  .cart-minimize i {
+    transition: transform 0.3s;
+  }
+  
+  /* Rotasi panah saat cart terbuka */
+  .cart-section.open .cart-minimize i {
+    transform: rotate(180deg);
+  }
+}
+
+/* 3. FIX: Tombol Bayar selalu terlihat */
+.cart-footer {
+  position: sticky;
+  bottom: 0;
+  background: var(--bg-card);
+  z-index: 10;
+  padding: 1rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.cart-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.btn-pay {
+  display: flex !important;
+  grid-column: span 2 !important;
+  width: 100% !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* 4. FIX: Tombol Uang Pas di Modal Pembayaran */
+.quick-amount[data-amount="exact"] {
+  display: inline-flex !important;
+  background: linear-gradient(135deg, var(--success), #059669) !important;
+  color: white !important;
+  border: 2px solid var(--success) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 50px !important;
+  font-weight: 600 !important;
+  order: -1;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* 5. FIX: Mobile cart positioning agar tidak menutupi bottom nav */
+@media(max-width:1024px) {
+  .cart-section {
+    bottom: var(--bottom-nav-height) !important;
+    max-height: 60vh !important;
+    z-index: 150 !important;
+  }
+  
+  /* Pastikan cart bisa discroll */
+  .cart-items {
+    max-height: 35vh !important;
+    overflow-y: auto !important;
+  }
+}
+
+/* 6. FIX: Cart toggle button */
+.cart-toggle {
+  bottom: calc(var(--bottom-nav-height) + 1rem) !important;
+  z-index: 200 !important;
+  display: flex !important;
+}
+
+/* 7. Fix layout shift saat keyboard muncul di mobile */
+@media(max-width:768px) {
+  .kasir-layout {
+    min-height: auto !important;
+    height: auto !important;
+  }
+  
+  .product-section {
+    min-height: 50vh !important;
+  }
+}
+    
   </style>
 </head>
 <body>
